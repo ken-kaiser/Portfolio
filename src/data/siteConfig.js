@@ -50,7 +50,7 @@ export const nav = [
 
 export const about = {
   paragraphs: [
-    "I'm a fourth-year BSIT student from Cebu, Philippines, interested in the intersection of software development and visual design.",
+    "I'm a fourth-year BSIT student from Cebu, interested in the intersection of software development and visual design.",
     'I enjoy building web interfaces, exploring new technologies, and turning rough ideas into things people can actually use.',
     'Outside development, I spend time experimenting with graphic design, photo editing, digital illustration, and other creative projects.',
   ],

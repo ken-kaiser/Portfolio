@@ -53,7 +53,7 @@ const HOME_DESC =
 
 /* ── Shell (rendered once) ─────────────────────────────────── */
 root.innerHTML = `
-  <div id="scroll-progress" class="fixed top-0 left-0 right-0 h-[2.5px] bg-[#2563eb] z-[70] origin-left pointer-events-none will-change-transform" style="transform: scaleX(0);" aria-hidden="true"></div>
+  <div id="scroll-progress" class="fixed top-0 left-0 right-0 h-[2.5px] bg-acid z-[70] origin-left pointer-events-none will-change-transform" style="transform: scaleX(0);" aria-hidden="true"></div>
   ${RulerScrollbar()}
   <a href="#main" class="skip-link">Skip to content</a>
   ${Navbar()}

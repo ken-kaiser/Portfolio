@@ -509,9 +509,9 @@
 
   /* ── Technical Ruler-Style Scroll Progress Indicator ──── */
   :root {
-    --tech-blue: #2563eb;
-    --tech-blue-hover: #1d4ed8;
-    --tech-blue-glow: rgba(37, 99, 235, 0.25);
+    --ruler-accent: var(--color-acid); /* Light green / acid #d7ff00 */
+    --ruler-accent-hover: #e5ff33;
+    --ruler-accent-glow: rgba(215, 255, 0, 0.45);
   }
 
   /* Universal body right-padding so page content is never obscured */
@@ -583,9 +583,9 @@
     width: 3px;
     height: 3px;
     border-radius: 9999px;
-    background-color: var(--tech-blue);
+    background-color: var(--ruler-accent);
     margin-bottom: 2px;
-    opacity: 0.75;
+    opacity: 0.9;
     transition: transform 150ms ease, opacity 150ms ease;
   }
   .ruler-nav-btn:hover .ruler-btn-pip {
@@ -626,7 +626,7 @@
     background: transparent;
   }
   .ruler-track:focus-visible {
-    box-shadow: inset 0 0 0 2px var(--tech-blue);
+    box-shadow: inset 0 0 0 2px var(--color-ink);
   }
 
   .ruler-ticks {
@@ -694,9 +694,9 @@
     }
   }
 
-  /* Active graduation highlight in technical blue */
+  /* Active graduation highlight */
   .ruler-tick-major.is-active-tick .ruler-tick-line {
-    background-color: var(--tech-blue);
+    background-color: var(--color-ink);
     width: 10px;
   }
   @media (min-width: 1024px) {
@@ -705,18 +705,18 @@
     }
   }
   .ruler-tick-major.is-active-tick .ruler-tick-text {
-    color: var(--tech-blue);
+    color: var(--color-ink);
     font-weight: 700;
   }
 
-  /* Small Blue Percentage Indicator */
+  /* Small Light Green Percentage Indicator */
   .ruler-thumb {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 24px;
-    background-color: var(--tech-blue);
+    background-color: var(--ruler-accent);
     border-top: 1px solid var(--color-ink);
     border-bottom: 1px solid var(--color-ink);
     display: flex;
@@ -729,12 +729,12 @@
     transition: background-color 100ms ease;
   }
   .ruler-thumb:hover {
-    background-color: var(--tech-blue-hover);
+    background-color: var(--ruler-accent-hover);
   }
   .ruler-thumb.is-dragging {
     cursor: grabbing;
-    background-color: var(--tech-blue-hover);
-    box-shadow: 0 0 6px var(--tech-blue-glow), -1px 0 0 var(--color-ink);
+    background-color: var(--ruler-accent-hover);
+    box-shadow: 0 0 6px var(--ruler-accent-glow), -1px 0 0 var(--color-ink);
   }
 
   /* Technical needle line */
@@ -744,8 +744,8 @@
     top: 50%;
     transform: translateY(-50%);
     width: 3.5px;
-    height: 1px;
-    background-color: #ffffff;
+    height: 1.5px;
+    background-color: var(--color-ink);
   }
 
   .ruler-pct {
@@ -753,7 +753,7 @@
     font-size: 8px;
     font-weight: 700;
     line-height: 1;
-    color: #ffffff;
+    color: var(--color-ink);
     letter-spacing: -0.05em;
     user-select: none;
   }
