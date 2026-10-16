@@ -8,7 +8,7 @@ export function About() {
   const interests = about.interests
     .map(
       (item, i) => `
-        <li class="flex items-baseline gap-4 border-b border-ink py-3 last:border-b-0">
+        <li class="interest-item flex items-baseline gap-4 border-b border-ink py-3 last:border-b-0 cursor-default">
           <span class="label w-6 text-mute">${String(i + 1).padStart(2, '0')}</span>
           <span class="font-display text-xl font-medium tracking-[-0.02em]">${esc(item)}</span>
         </li>`

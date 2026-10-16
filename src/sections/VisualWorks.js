@@ -39,7 +39,7 @@ export function VisualWorks() {
         : [null];
 
       return `
-        <article class="work-item group flex flex-col border border-ink bg-paper transition-shadow hover:shadow-[4px_4px_0_var(--color-ink)]"
+        <article class="work-item rise group flex flex-col border border-ink bg-paper transition-all hover:shadow-[5px_5px_0_var(--color-ink)]"
                  data-category="${esc(w.category)}"
                  data-work-id="${esc(w.id)}"
                  data-current-slide="0"

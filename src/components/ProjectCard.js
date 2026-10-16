@@ -64,7 +64,7 @@ export function ProjectCard(p, layout = 'stack') {
 
   if (layout === 'feature') {
     return `
-      <article class="border-b border-ink">
+      <article class="border-b border-ink rise">
         <a href="${href}" class="project-link group grid lg:grid-cols-12 hover:bg-surface/60" aria-label="${esc(aria)}">
           <div class="order-2 lg:order-1 lg:col-span-5 lg:border-r lg:border-ink">${text}</div>
           <div class="order-1 p-[clamp(1rem,2vw,1.75rem)] lg:order-2 lg:col-span-7">${media}</div>
@@ -74,7 +74,7 @@ export function ProjectCard(p, layout = 'stack') {
 
   if (layout === 'inverse') {
     return `
-      <article class="on-dark border-b border-ink bg-ink text-paper">
+      <article class="on-dark border-b border-ink bg-ink text-paper rise">
         <a href="${href}" class="project-link group grid md:grid-cols-12" aria-label="${esc(aria)}">
           <div class="p-[clamp(1rem,2vw,1.75rem)] md:col-span-5 md:border-r md:border-paper/25">${media}</div>
           <div class="md:col-span-7">${text}</div>
@@ -83,7 +83,7 @@ export function ProjectCard(p, layout = 'stack') {
   }
 
   return `
-    <article class="h-full">
+    <article class="h-full rise">
       <a href="${href}" class="project-link group flex h-full flex-col hover:bg-surface/60" aria-label="${esc(aria)}">
         <div class="p-[clamp(1rem,2vw,1.75rem)] pb-0">${media}</div>
         <div class="flex-1">${text}</div>

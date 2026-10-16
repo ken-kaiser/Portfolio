@@ -17,7 +17,7 @@ export function Skills() {
             ${g.items
               .map(
                 (item, i) => `
-                  <li class="flex items-baseline justify-between gap-4 border-b border-ink/20 py-3 last:border-b-0">
+                  <li class="skill-row flex items-baseline justify-between gap-4 border-b border-ink/20 py-3 last:border-b-0 cursor-default">
                     <span class="font-display text-[1.35rem] font-medium tracking-[-0.02em]">${esc(item)}</span>
                     <span class="label text-mute">${String.fromCharCode(65 + gi)}${i + 1}</span>
                   </li>`

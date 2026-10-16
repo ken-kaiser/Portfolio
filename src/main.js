@@ -12,6 +12,35 @@ import { Contact, initContact } from './sections/Contact.js';
 import { Footer } from './sections/Footer.js';
 import { CaseStudy, NotFound } from './pages/CaseStudy.js';
 
+// Always return to top on page refresh/reload
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
+const isReload =
+  (performance.getEntriesByType('navigation')[0] &&
+    performance.getEntriesByType('navigation')[0].type === 'reload') ||
+  performance.navigation?.type === 1;
+
+if (isReload) {
+  // Clear any internal anchor so page reload stays at the top
+  if (location.hash && !location.hash.startsWith('#/work/')) {
+    history.replaceState(null, '', location.pathname);
+  }
+}
+
+window.scrollTo(0, 0);
+
+window.addEventListener('beforeunload', () => {
+  window.scrollTo(0, 0);
+});
+
+window.addEventListener('load', () => {
+  if (isReload || !location.hash || location.hash === '#top') {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+});
+
 const root = document.getElementById('app');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -23,6 +52,7 @@ const HOME_DESC =
 
 /* ── Shell (rendered once) ─────────────────────────────────── */
 root.innerHTML = `
+  <div id="scroll-progress" class="fixed top-0 left-0 right-0 h-[2.5px] bg-acid z-[70] origin-left pointer-events-none will-change-transform" style="transform: scaleX(0);" aria-hidden="true"></div>
   <a href="#main" class="skip-link">Skip to content</a>
   ${Navbar()}
   <main id="main" class="sheet" tabindex="-1"></main>
@@ -30,6 +60,32 @@ root.innerHTML = `
 
 const main = document.getElementById('main');
 initNavbar();
+initScrollProgress();
+
+// Top scroll reading progress bar micro-animation
+function initScrollProgress() {
+  const bar = document.getElementById('scroll-progress');
+  if (!bar) return;
+  let ticking = false;
+  const update = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    bar.style.transform = `scaleX(${progress})`;
+    ticking = false;
+  };
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    },
+    { passive: true }
+  );
+  window.addEventListener('resize', update, { passive: true });
+  update();
+}
 
 // Skip link + "back to top" act in place (they must not trigger the hash router).
 document.addEventListener('click', (e) => {
@@ -50,7 +106,7 @@ document.addEventListener('click', (e) => {
 let revealObserver;
 function initReveal() {
   revealObserver?.disconnect();
-  const els = main.querySelectorAll('.reveal, .rise');
+  const els = main.querySelectorAll('.reveal, .rise, .work-item');
   if (reduceMotion.matches || !('IntersectionObserver' in window)) {
     els.forEach((el) => el.classList.add('is-in'));
     return;
@@ -63,7 +119,7 @@ function initReveal() {
           revealObserver.unobserve(e.target);
         }
       }),
-    { rootMargin: '0px 0px -8% 0px', threshold: 0.01 }
+    { rootMargin: '0px 0px -5% 0px', threshold: 0.02 }
   );
   els.forEach((el) => revealObserver.observe(el));
 }
@@ -103,12 +159,16 @@ function route() {
       initContact();
       initVisualWorks();
       startClock();
-      // Coming back from a case study: jump straight to the section.
-      const el = target && document.getElementById(target);
-      if (el) el.scrollIntoView({ behavior: 'instant' });
-      else window.scrollTo({ top: 0, behavior: 'instant' });
+
+      // If refreshed or loading home, return directly to top
+      if (isReload || !target || target === 'top') {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      } else {
+        const el = document.getElementById(target);
+        if (el) el.scrollIntoView({ behavior: 'instant' });
+        else window.scrollTo({ top: 0, behavior: 'instant' });
+      }
     }
-    // Same-page anchors scroll natively (smooth via CSS).
   }
 
   trackActiveSection();

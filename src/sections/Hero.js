@@ -32,9 +32,9 @@ export function Hero() {
       <!-- Headline -->
       <div class="px-page relative pt-10 pb-10 md:pt-14 lg:pt-16 lg:pb-14">
         <h1 id="hero-title" class="hero-title">
-          <span class="block">I design.</span>
-          <span class="block lg:pl-[1.15em]">I build.</span>
-          <span class="block">I make things <span class="hl">work.</span></span>
+          <span class="block rise hero-line-1">I design.</span>
+          <span class="block lg:pl-[1.15em] rise hero-line-2">I build.</span>
+          <span class="block rise hero-line-3">I make things <span class="hl">work.</span></span>
         </h1>
 
         <dl class="mt-10 max-w-md border-y border-ink lg:absolute lg:top-16 lg:right-[clamp(1rem,3.2vw,3rem)] lg:mt-0 lg:w-[min(30%,26rem)]">
