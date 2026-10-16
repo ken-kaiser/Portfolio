@@ -108,7 +108,7 @@ export function VisualWorks() {
               <!-- Hover overlay prompt -->
               <div class="absolute inset-0 bg-ink/15 opacity-0 group-hover/frame:opacity-100 transition-opacity flex items-center justify-center pointer-events-none z-10">
                 <span class="btn btn-primary text-xs pointer-events-none py-1.5 px-3">
-                  ${isSeries ? `View All ${total} Posters ⧉` : `Expand View ⧉`}
+                  ${isSeries ? `View All ${total} Posters` : `Expand View`}
                 </span>
               </div>
             </button>
@@ -217,13 +217,13 @@ export function VisualWorks() {
             <div class="flex items-center gap-3">
               <span id="lightbox-badge" class="bg-acid text-ink px-1.5 py-0.5 font-bold"></span>
               <span id="lightbox-slide-counter" class="text-ink font-mono font-bold"></span>
-              <span class="label hidden sm:inline text-mute border-l border-ink/40 pl-3">Infinite Loop Active ↻</span>
+              <span class="label hidden sm:inline text-mute border-l border-ink/40 pl-3">Infinite Loop Active</span>
             </div>
             <button type="button"
                     id="lightbox-close"
                     class="label flex items-center gap-2 border border-ink bg-paper px-3 py-1 hover:bg-ink hover:text-paper transition-colors cursor-pointer"
                     aria-label="Close modal">
-              <span>Close</span> <span aria-hidden="true">✕</span>
+              <span>Close</span> <span aria-hidden="true" class="font-bold">&times;</span>
             </button>
           </div>
 
@@ -256,7 +256,7 @@ export function VisualWorks() {
                 <!-- Touch / swipe hint badge -->
                 <div class="absolute bottom-2 right-2 z-20 pointer-events-none opacity-60 hover:opacity-100 transition-opacity">
                   <span class="label text-[0.62rem] bg-ink text-paper px-2 py-0.5 font-mono">
-                    SWIPE / ‹ › / ESC
+                    SWIPE / ARROWS / ESC
                   </span>
                 </div>
               </div>

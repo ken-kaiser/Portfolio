@@ -37,7 +37,7 @@ export function Contact() {
           <span class="truncate normal-case tracking-normal">${esc(site.email)}</span><span class="arrow" aria-hidden="true">↗</span>
         </a>
         <button type="button" class="btn btn-ghost border-paper text-paper hover:bg-paper hover:text-ink" data-copy="${esc(site.email)}">
-          <span data-copy-label>Copy email</span><span class="arrow" aria-hidden="true">⧉</span>
+          <span data-copy-label>Copy email</span><span class="arrow" aria-hidden="true">&rarr;</span>
         </button>
       </div>
       <p class="label text-paper/60" aria-live="polite" data-copy-status></p>`
