@@ -1,8 +1,8 @@
 # Clark Kent Gomez — Developer & Digital Designer Portfolio
 
-A digital brutalist web portfolio for **Clark Kent Gomez** (4th-year BSIT student, frontend developer, and digital designer from Cebu, Philippines).
+Welcome to my personal web portfolio! I'm **Clark Kent Gomez**, a 4th-year BSIT student, frontend developer, and digital designer based in Cebu, Philippines.
 
-Built with high visual intentionality: curated HSL-balanced paper/ink color tokens, strict typography hierarchy, Swiss grid discipline, interactive project case studies, and a hardware-accelerated infinite-loop visual works carousel.
+I build web applications and thoughtful digital experiences where software engineering meets visual design. I created this portfolio with a digital brutalist aesthetic—featuring curated paper/ink color tokens, strict typographic hierarchy, Swiss grid discipline, interactive case studies for my capstone projects, and an infinite-loop visual archive showcasing my poster and graphic design work.
 
 ---
 
@@ -19,15 +19,15 @@ Built with high visual intentionality: curated HSL-balanced paper/ink color toke
 
 ### 01 / Flagship Web Applications
 1. **[Presentia](https://presentia.venki050524.workers.dev/)** — AI-Powered Facial Recognition Attendance Management System
-   - **Role**: Project Manager
+   - **My Role**: Project Manager
    - **Stack & Tools**: Git · ChatGPT · Claude · Cloudflare Workers
 2. **[EasyCert](https://easy-cert.vercel.app/)** — Digital Barangay Clearance & Certificate Issuance Portal
-   - **Role**: Project Manager & Software Developer
+   - **My Role**: Project Manager & Software Developer
    - **Stack & Tools**: Git · ChatGPT · Claude · Vercel
 
 ### 02 / Visual Works & Print Archive
-- **Nike Poster Series**: 7-part conceptual campaign exploring athlete energy and bold Swiss typography with an infinite-loop carousel and full-screen lightbox modal.
-- **Commercial & Branding Prints**: Multi-ratio posters, distortion experiments, and editorial layouts.
+- **Nike Poster Series**: A 7-part conceptual campaign I designed exploring raw athlete energy and bold Swiss typography, featuring an infinite-loop carousel and full-screen lightbox modal.
+- **Commercial & Branding Prints**: Multi-ratio posters, distortion experiments, and editorial layouts I created.
 
 ---
 
@@ -40,7 +40,7 @@ Built with high visual intentionality: curated HSL-balanced paper/ink color toke
 ### Installation
 
 ```bash
-# Clone the repository
+# Clone my repository
 git clone https://github.com/ken-kaiser/Portfolio.git
 
 # Navigate to project directory
@@ -61,7 +61,7 @@ Visit `http://localhost:5173/` in your browser.
 # Generate optimized production bundle
 npm run build
 
-# Preview production build locally
+# Preview production bundle locally
 npm run preview
 ```
 
