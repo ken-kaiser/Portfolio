@@ -1,57 +1,64 @@
 /**
  * ─────────────────────────────────────────────────────────────
- *  RULER SCROLLBAR & SCROLL PROGRESS INDICATOR
+ *  TECHNICAL RULER-STYLE SCROLL PROGRESS INDICATOR
  * ─────────────────────────────────────────────────────────────
- *  Architectural drafting-scale scrollbar combined with a live
- *  percentage needle and scrubbable navigation track.
+ *  Minimalist vertical measuring instrument fixed to the right
+ *  edge of the viewport, featuring evenly spaced horizontal tick marks,
+ *  numbered scroll-position markers, and a small technical blue
+ *  percentage indicator that updates in real time.
  */
 
 export function RulerScrollbar() {
-  // Generate ticks from 0% to 100% at 2.5% intervals
+  // Generate evenly spaced horizontal tick marks from 0% to 100% at 2.5% intervals
   const ticks = [];
   for (let i = 0; i <= 100; i += 2.5) {
     const isMajor = i % 10 === 0;
     const isMedium = !isMajor && i % 5 === 0;
-    const isMinor = !isMajor && !isMedium;
 
     let type = 'ruler-tick-minor';
     let label = '';
 
     if (isMajor) {
       type = 'ruler-tick-major';
-      label = i === 100 ? '99' : String(i).padStart(2, '0');
+      label = i === 100 ? '100' : String(i).padStart(2, '0');
     } else if (isMedium) {
       type = 'ruler-tick-medium';
     }
 
     ticks.push(`
-      <div class="ruler-tick ${type}" style="top: ${i}%;" aria-hidden="true">
+      <div class="ruler-tick ${type}" style="top: ${i}%;" data-tick-pct="${i}" aria-hidden="true">
         <span class="ruler-tick-line"></span>
         ${label ? `<span class="ruler-tick-text">${label}</span>` : ''}
       </div>`);
   }
 
   return `
-    <aside id="ruler-scrollbar" class="ruler-scrollbar" aria-label="Scroll ruler indicator" role="region">
-      <button type="button" class="ruler-nav-btn ruler-nav-top" data-ruler-top title="Scroll to top" aria-label="Scroll to top">
+    <aside id="ruler-scrollbar" class="ruler-scrollbar" aria-label="Technical scroll progress ruler" role="region">
+      <!-- Top Instrument Calibration / Return to Top -->
+      <button type="button" class="ruler-nav-btn ruler-nav-top" data-ruler-top title="Return to 00% (Top)" aria-label="Scroll to top">
+        <span class="ruler-btn-pip" aria-hidden="true"></span>
         <span class="ruler-btn-num">00</span>
-        <span class="ruler-btn-tag">TOP</span>
+        <span class="ruler-btn-tag">Y-AXIS</span>
       </button>
 
+      <!-- Minimalist Vertical Track with Measuring Scale -->
       <div id="ruler-track" class="ruler-track" role="slider" tabindex="0"
-           aria-label="Page scroll position" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+           aria-label="Scroll progress position" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
         <div class="ruler-ticks" aria-hidden="true">
           ${ticks.join('')}
         </div>
 
+        <!-- Small Blue Percentage Indicator with Technical Needle -->
         <div id="ruler-thumb" class="ruler-thumb" aria-hidden="true">
           <span class="ruler-needle"></span>
           <span id="ruler-pct" class="ruler-pct">00%</span>
         </div>
       </div>
 
-      <button type="button" class="ruler-nav-btn ruler-nav-bottom" data-ruler-bottom title="Scroll to end" aria-label="Scroll to end">
-        <span class="ruler-btn-num">99</span>
+      <!-- Bottom Instrument Calibration / Jump to End -->
+      <button type="button" class="ruler-nav-btn ruler-nav-bottom" data-ruler-bottom title="Jump to 100% (End)" aria-label="Scroll to end">
+        <span class="ruler-btn-pip" aria-hidden="true"></span>
+        <span class="ruler-btn-num">100</span>
         <span class="ruler-btn-tag">END</span>
       </button>
     </aside>`;
@@ -68,6 +75,7 @@ export function initRulerScrollbar() {
 
   if (!ruler || !track || !thumb || !pct) return;
 
+  const majorTicks = track.querySelectorAll('.ruler-tick-major');
   let isDragging = false;
   let ticking = false;
 
@@ -80,17 +88,28 @@ export function initRulerScrollbar() {
     const pctVal = Math.round(progress * 100);
 
     const trackHeight = track.clientHeight;
-    const thumbHeight = thumb.clientHeight || 34;
+    const thumbHeight = thumb.clientHeight || 24;
     const available = Math.max(0, trackHeight - thumbHeight);
     const thumbY = progress * available;
 
     thumb.style.transform = `translate3d(0, ${thumbY}px, 0)`;
-    pct.textContent = `${String(pctVal).padStart(2, '0')}%`;
+    pct.textContent = `${pctVal}%`;
     track.setAttribute('aria-valuenow', String(pctVal));
 
     if (progressBar) {
       progressBar.style.transform = `scaleX(${progress})`;
     }
+
+    // Technical indicator: illuminate the nearest major calibration marker in subtle blue
+    const nearestMajor = Math.round(progress * 10) * 10;
+    majorTicks.forEach((tick) => {
+      const tickVal = parseInt(tick.dataset.tickPct, 10);
+      if (tickVal === nearestMajor) {
+        tick.classList.add('is-active-tick');
+      } else {
+        tick.classList.remove('is-active-tick');
+      }
+    });
 
     ticking = false;
   };
@@ -105,7 +124,7 @@ export function initRulerScrollbar() {
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
 
-  // Observe body mutations/resizes so routing updates position instantly
+  // Update immediately when route changes or DOM height changes
   if ('ResizeObserver' in window) {
     const ro = new ResizeObserver(() => {
       if (!ticking) {
@@ -127,7 +146,7 @@ export function initRulerScrollbar() {
     });
   };
 
-  // Click on top/bottom navigation buttons
+  // Top/bottom calibration jump buttons
   btnTop?.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
@@ -137,10 +156,10 @@ export function initRulerScrollbar() {
     window.scrollTo({ top: max, behavior: 'smooth' });
   });
 
-  // Track clicking & scrubbing
+  // Track click & scrub interactions
   const handlePointerScrub = (e, smooth = false) => {
     const rect = track.getBoundingClientRect();
-    const thumbHeight = thumb.clientHeight || 34;
+    const thumbHeight = thumb.clientHeight || 24;
     const available = rect.height - thumbHeight;
     if (available <= 0) return;
 
@@ -150,7 +169,6 @@ export function initRulerScrollbar() {
   };
 
   track.addEventListener('pointerdown', (e) => {
-    // If target is inside the thumb or track
     isDragging = true;
     thumb.classList.add('is-dragging');
     track.setPointerCapture(e.pointerId);
@@ -174,7 +192,7 @@ export function initRulerScrollbar() {
   track.addEventListener('pointerup', stopDrag);
   track.addEventListener('pointercancel', stopDrag);
 
-  // Keyboard navigation for accessibility
+  // Keyboard navigation
   track.addEventListener('keydown', (e) => {
     const step = 90;
     const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -209,7 +227,7 @@ export function initRulerScrollbar() {
     }
   });
 
-  // Initial draw
+  // Initial calculation
   update();
 
   return update;

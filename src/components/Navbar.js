@@ -35,9 +35,9 @@ export function Navbar() {
   return `
     <header class="sticky top-0 z-50 border-b border-ink bg-paper">
       <div class="sheet flex h-[var(--nav-h)] items-stretch justify-between">
-        <a href="#top" class="group flex items-center gap-3 pl-[clamp(1rem,3.2vw,3rem)] pr-4" aria-label="${esc(site.name)}, back to top">
-          <span class="flex items-center transition-transform group-hover:-translate-y-0.5">${Logo({ className: 'h-4 sm:h-5 w-auto' })}</span>
-          <span class="label hidden text-mute sm:inline">${esc(site.name)}</span>
+        <a href="#top" class="group flex h-full items-center gap-3 px-4 sm:px-6 hover:bg-surface/60 transition-colors" aria-label="${esc(site.name)}, back to top">
+          <span class="flex items-center">${Logo({ className: 'h-4 sm:h-5 w-auto' })}</span>
+          <span class="label hidden text-mute transition-colors group-hover:text-ink sm:inline">${esc(site.name)}</span>
         </a>
 
         <nav aria-label="Primary" class="hidden lg:flex">
