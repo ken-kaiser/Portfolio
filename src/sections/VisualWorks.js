@@ -6,7 +6,8 @@ import { esc } from '../lib/utils.js';
 // Helper to get normalized array of images for an item
 function getItemImages(w) {
   if (Array.isArray(w.images) && w.images.length) return w.images;
-  if (w.image) return [w.image];
+  if (Array.isArray(w.image) && w.image.length) return w.image;
+  if (typeof w.image === 'string' && w.image) return [w.image];
   return [];
 }
 
@@ -92,9 +93,9 @@ export function VisualWorks() {
                           : isSeries
                           ? `Poster ${realNumber} of ${total}`
                           : 'Poster slot',
-                        mark: `0${realNumber}`,
+                        mark: String(realNumber).padStart(2, '0'),
                         hint: isSeries
-                          ? `public/works/nike/poster-0${realNumber}.jpg`
+                          ? `public/works/${w.id === '05' ? 'nike' : 'scd'}/poster-${String(realNumber).padStart(2, '0')}.jpg`
                           : `public/works/poster-${w.id}.jpg`,
                         lazy: false,
                         reveal: false,

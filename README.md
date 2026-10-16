@@ -30,6 +30,7 @@ I build web applications and thoughtful digital experiences where software engin
 
 ### 02 / Visual Works & Print Archive
 - **Nike Poster Series**: A 7-part conceptual campaign I designed exploring raw athlete energy and bold Swiss typography, featuring an infinite-loop carousel and full-screen lightbox modal.
+- **Student Community Day 2026**: A 10-part partner recognition and promotional campaign highlighting community collaborations with clean typography, organizational badges, and cohesive square layouts.
 - **Commercial & Branding Prints**: Multi-ratio posters, distortion experiments, and editorial layouts I created.
 
 ---
