@@ -17,28 +17,28 @@
  *  Aspect Ratios: '3/4' (standard poster), '4/5', or '1/1' (square).
  */
 
-export const visualCategories = ['All', 'Posters', 'Typography', 'Branding', 'Graphics'];
+export const visualCategories = ['All', 'Posters', 'Typography', 'Branding', 'Logo Design'];
 
 export const visualWorks = [
   {
     id: '01',
-    title: 'Soundwave Manila Live',
-    category: 'Posters',
-    tools: 'Photoshop · Figma',
+    title: 'Shuriken Logo Pattern',
+    category: 'Logo Design',
+    tools: 'Figma',
     year: '2026',
     ratio: '3/4',
-    image: null, // Replace with './works/poster-01.jpg'
-    caption: 'Experimental gig poster exploration blending Swiss grid discipline with high-contrast digital brutalism.',
+    image: './works/Pattern.jpg',
+    caption: 'An exploration of pattern and modularity using a single shuriken-style logo.',
   },
   {
     id: '02',
-    title: 'Need a Website? — Web & App Design',
-    category: 'Posters',
-    tools: 'Photoshop · Figma',
+    title: 'Neon Type Poster',
+    category: 'Typography',
+    tools: 'Figma · Photoshop',
     year: '2026',
-    ratio: '2/3',
+    ratio: '3/4',
     image: './works/Frame.jpg',
-    caption: 'Commercial promotional poster showcasing custom web and app development capabilities, featuring a 3D perspective fan of responsive digital interfaces set against atmospheric cyan volumetric lighting.',
+    caption: 'Oversized typographic print study testing distortion, letterform weight contrast, and ink textures.',
   },
   {
     id: '03',
@@ -65,7 +65,7 @@ export const visualWorks = [
     id: '04',
     title: 'Where Great Ideas Become Exceptional Prints',
     category: 'Branding',
-    tools: 'Figma · Illustrator',
+    tools: 'Figma · Photoshop',
     year: '2026',
     ratio: '4/5',
     image: './works/poster-04.jpg',
@@ -78,7 +78,6 @@ export const visualWorks = [
     tools: 'Figma · Illustrator',
     year: '2026',
     ratio: '3/4',
-    // 7 posters inside public/works/nike/
     images: [
       './works/nike/poster-01.jpg',
       './works/nike/poster-02.jpg',
@@ -92,12 +91,18 @@ export const visualWorks = [
   },
   {
     id: '06',
-    title: 'Digital Brutalism Editorial',
+    title: 'Presentia — Product Slide Deck',
     category: 'Posters',
-    tools: 'Figma · Photoshop',
+    tools: 'Figma',
     year: '2026',
-    ratio: '3/4',
-    image: null, // Replace with './works/poster-06.jpg'
-    caption: 'Exhibition poster concept designed with strict mono tables, coordinate stamps, and heavy ink borders.',
+    ratio: '1/1',
+    images: [
+      './works/presentia/slide1.png',
+      './works/presentia/slide2.png',
+      './works/presentia/slide3.png',
+      './works/presentia/slide4.png',
+      './works/presentia/slide5.png',
+    ],
+    caption: 'A 5-part panoramic slide deck showcasing Presentia v1.4.0, highlighting student biometric enrollment, 5-pose liveness verification, and real-time Google Meet and Zoom classroom monitoring through 3D isometric glassmorphism mockups.',
   },
 ];
