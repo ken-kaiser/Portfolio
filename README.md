@@ -17,13 +17,16 @@ I build web applications and thoughtful digital experiences where software engin
 
 ## Featured Work
 
-### 01 / Flagship Web Applications
+### 01 / Flagship Web Applications & Games
 1. **[Presentia](https://presentia.venki050524.workers.dev/)** — AI-Powered Facial Recognition Attendance Management System
    - **My Role**: Project Manager
    - **Stack & Tools**: Git · ChatGPT · Claude · Cloudflare Workers
 2. **[EasyCert](https://easy-cert.vercel.app/)** — Digital Barangay Clearance & Certificate Issuance Portal
    - **My Role**: Project Manager & Software Developer
    - **Stack & Tools**: Git · ChatGPT · Claude · Vercel
+3. **[Bato-Bato Pick](https://github.com/ken-kaiser/Bato-Bato-Pick)** — Interactive Filipino Rock-Paper-Scissors Arcade Game
+   - **My Role**: Game Designer & Frontend Developer
+   - **Stack & Tools**: HTML5 · CSS3 · JavaScript (ES6) · Web Audio API · Git
 
 ### 02 / Visual Works & Print Archive
 - **Nike Poster Series**: A 7-part conceptual campaign I designed exploring raw athlete energy and bold Swiss typography, featuring an infinite-loop carousel and full-screen lightbox modal.

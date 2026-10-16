@@ -165,6 +165,84 @@ export const projects = [
       },
     ],
   },
+
+  {
+    slug: 'bato-bato-pick',
+    number: '03',
+    name: 'Bato-Bato Pick',
+    category: 'Web Game / Interactive Arcade',
+    identifier: 'GAME / ARCADE',
+    badge: 'Arcade Game',
+    summary:
+      'An interactive Filipino-inspired Rock-Paper-Scissors arcade web game featuring custom sound design, retro neon aesthetics, dynamic CPU AI difficulty, and win-streak multipliers.',
+    status: 'Published Game',
+    role: 'Game Designer & Frontend Developer',
+    stack: ['HTML5', 'CSS3', 'JavaScript', 'Web Audio API', 'Git'],
+    year: '2024',
+    links: [{ label: 'GitHub Repository', url: 'https://github.com/ken-kaiser/Bato-Bato-Pick' }],
+    cover: {
+      variant: 'grid',
+      ratio: '16/10',
+      image: {
+        src: './images/bato-bato-pick-cover.png',
+        alt: 'Bato-Bato Pick Filipino Arcade Game Arena',
+      },
+    },
+    features: [
+      { name: 'Filipino rhythmic chant audio ("Bato-Bato-Pick!")', status: 'implemented' },
+      { name: 'Interactive hand gesture animations (Rock, Paper, Scissors)', status: 'implemented' },
+      { name: 'Adaptive CPU opponent AI and difficulty scaling', status: 'implemented' },
+      { name: 'Consecutive win-streak counter & high-score tracking', status: 'implemented' },
+      { name: 'Retro arcade audio toggle & Web Audio synthesizers', status: 'implemented' },
+    ],
+    caseStudy: {
+      problem: [
+        'Classic party and playground games like Filipino Rock-Paper-Scissors (Bato-Bato-Pick) often lose their cultural charm, rhythmic anticipation, and kinetic excitement when ported to flat, uninspired browser mini-games.',
+        'Simple casual web games frequently suffer from unresponsive tactile feedback, repetitive visual loops, and lack of replay motivation.',
+      ],
+      approach: [
+        'Designed and engineered an arcade-style web game celebrating the Filipino street game with rhythmic anticipation, custom sound effects, vibrant neon-gold styling, and instant tactile feedback.',
+        'Implemented state-driven game mechanics tracking score tallies, best win streaks, dynamic rounds, and an unpredictable CPU opponent.',
+      ],
+      role: 'Game Designer & Frontend Developer — coded core game loop, hand gesture visual animation timing, Web Audio triggers, responsive layout, and Git version control.',
+      decisions: [
+        {
+          title: 'Rhythmic anticipation timing',
+          text: 'Synchronized visual hand shakes with the classic 3-beat cadence before revealing choices to capture authentic playground tension.',
+        },
+        {
+          title: 'Zero-dependency pure ES6 architecture',
+          text: 'Built the game with clean vanilla JavaScript, standard CSS keyframes, and Web Audio API without bulky game engines, ensuring instant sub-second load times.',
+        },
+        {
+          title: 'Persistent session state & score tracking',
+          text: 'Used local storage to preserve personal high scores and consecutive win records across browser sessions.',
+        },
+      ],
+      challenges: [
+        'Fine-tuning animation timing and sound synchronization across different browser frame rates to maintain satisfying arcade responsiveness.',
+      ],
+      prompts: {},
+    },
+    gallery: [
+      {
+        caption: 'Bato-Bato Pick retro arcade game title screen and combat arena',
+        ratio: '16/9',
+        image: {
+          src: './images/bato-bato-pick-cover.png',
+          alt: 'Bato-Bato Pick Arcade Arena Interface',
+        },
+      },
+      {
+        caption: 'In-game battle round showdown with CPU gesture selection and score counter',
+        ratio: '16/9',
+        image: {
+          src: './images/bato-bato-pick-preview.png',
+          alt: 'Bato-Bato Pick In-Game Battle Interface',
+        },
+      },
+    ],
+  },
 ];
 
 export const getProject = (slug) => projects.find((p) => p.slug === slug);

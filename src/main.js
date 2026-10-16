@@ -2,6 +2,7 @@ import './styles/main.css';
 
 import { site } from './data/siteConfig.js';
 import { getProject } from './data/projects.js';
+import { RulerScrollbar, initRulerScrollbar } from './components/RulerScrollbar.js';
 import { Navbar, initNavbar, trackActiveSection } from './components/Navbar.js';
 import { Hero, startClock } from './sections/Hero.js';
 import { Work } from './sections/Work.js';
@@ -53,6 +54,7 @@ const HOME_DESC =
 /* ── Shell (rendered once) ─────────────────────────────────── */
 root.innerHTML = `
   <div id="scroll-progress" class="fixed top-0 left-0 right-0 h-[2.5px] bg-acid z-[70] origin-left pointer-events-none will-change-transform" style="transform: scaleX(0);" aria-hidden="true"></div>
+  ${RulerScrollbar()}
   <a href="#main" class="skip-link">Skip to content</a>
   ${Navbar()}
   <main id="main" class="sheet" tabindex="-1"></main>
@@ -60,32 +62,7 @@ root.innerHTML = `
 
 const main = document.getElementById('main');
 initNavbar();
-initScrollProgress();
-
-// Top scroll reading progress bar micro-animation
-function initScrollProgress() {
-  const bar = document.getElementById('scroll-progress');
-  if (!bar) return;
-  let ticking = false;
-  const update = () => {
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-    bar.style.transform = `scaleX(${progress})`;
-    ticking = false;
-  };
-  window.addEventListener(
-    'scroll',
-    () => {
-      if (!ticking) {
-        requestAnimationFrame(update);
-        ticking = true;
-      }
-    },
-    { passive: true }
-  );
-  window.addEventListener('resize', update, { passive: true });
-  update();
-}
+const updateRuler = initRulerScrollbar();
 
 // Skip link + "back to top" act in place (they must not trigger the hash router).
 document.addEventListener('click', (e) => {
@@ -173,6 +150,7 @@ function route() {
 
   trackActiveSection();
   initReveal();
+  updateRuler?.();
 }
 
 window.addEventListener('hashchange', route);

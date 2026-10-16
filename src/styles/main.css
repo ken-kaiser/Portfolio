@@ -259,7 +259,7 @@
     }
   }
 
-  /* ── Nav with micro-wipe ───────────────────────────────── */
+  /* ── Nav links ─────────────────────────────────────────── */
   .nav-link {
     position: relative;
     display: inline-flex;
@@ -269,32 +269,13 @@
     padding-inline: 1rem;
     border-left: 1px solid var(--color-ink);
     transition: background-color 150ms ease, color 150ms ease;
-    overflow: hidden;
-  }
-  .nav-link::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2.5px;
-    background: var(--color-acid);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 220ms var(--ease-snap);
-  }
-  .nav-link:hover::before {
-    transform: scaleX(1);
   }
   .nav-link:hover {
     background: var(--color-surface);
   }
   .nav-link[aria-current='location'] {
     background: var(--color-acid);
-  }
-  .nav-link[aria-current='location']::before {
-    background: var(--color-ink);
-    transform: scaleX(1);
+    color: var(--color-ink);
   }
 
   /* ── Interactive row micro-animations ─────────────────── */
@@ -524,5 +505,185 @@
     .js-motion #works-grid > article:nth-child(4) { transition-delay: 190ms; }
     .js-motion #works-grid > article:nth-child(5) { transition-delay: 240ms; }
     .js-motion #works-grid > article:nth-child(6) { transition-delay: 290ms; }
+  }
+
+  /* ── Ruler-Style Scrollbar & Scroll Progress Indicator ──── */
+  .ruler-scrollbar {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    body {
+      padding-right: 44px;
+    }
+
+    /* Native browser scrollbar hidden on desktop in favor of interactive ruler */
+    html {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    html::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ruler-scrollbar {
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 44px;
+      background: var(--color-paper);
+      border-left: 1px solid var(--color-ink);
+      z-index: 55;
+      user-select: none;
+    }
+
+    .ruler-nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0.35rem 0;
+      transition: background-color 120ms ease;
+    }
+    .ruler-nav-btn:hover {
+      background-color: var(--color-acid);
+    }
+    .ruler-nav-top {
+      height: var(--nav-h);
+      border-bottom: 1px solid var(--color-ink);
+    }
+    .ruler-nav-bottom {
+      height: 2.75rem;
+      border-top: 1px solid var(--color-ink);
+    }
+    .ruler-btn-num {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--color-ink);
+    }
+    .ruler-btn-tag {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.08em;
+      color: var(--color-mute);
+    }
+
+    .ruler-track {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      cursor: ns-resize;
+      outline: none;
+    }
+    .ruler-track:focus-visible {
+      outline: 2px solid var(--color-ink);
+      outline-offset: -2px;
+    }
+
+    .ruler-ticks {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .ruler-tick {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .ruler-tick-line {
+      height: 1px;
+      background-color: var(--color-ink);
+    }
+    .ruler-tick-major .ruler-tick-line {
+      width: 13px;
+      opacity: 0.85;
+    }
+    .ruler-tick-medium .ruler-tick-line {
+      width: 8px;
+      opacity: 0.45;
+    }
+    .ruler-tick-minor .ruler-tick-line {
+      width: 4px;
+      opacity: 0.25;
+    }
+    .ruler-tick-text {
+      font-family: var(--font-mono);
+      font-size: 7.5px;
+      line-height: 1;
+      color: var(--color-mute);
+      margin-left: 2px;
+      letter-spacing: -0.05em;
+    }
+
+    .ruler-thumb {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 34px;
+      background-color: var(--color-acid);
+      border-top: 1px solid var(--color-ink);
+      border-bottom: 1px solid var(--color-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      z-index: 10;
+      will-change: transform;
+      box-shadow: -2px 0 0 var(--color-ink);
+      transition: background-color 100ms ease;
+    }
+    .ruler-thumb:hover {
+      background-color: #e5ff33;
+    }
+    .ruler-thumb.is-dragging {
+      cursor: grabbing;
+      background-color: var(--color-acid);
+    }
+    .ruler-needle {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 2px;
+      background-color: var(--color-ink);
+    }
+    .ruler-pct {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--color-ink);
+      letter-spacing: -0.04em;
+    }
+  }
+
+  /* Custom styled scrollbars on mobile / touch viewports */
+  @media (max-width: 1023px) {
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--color-paper);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--color-ink);
+    }
   }
 }
