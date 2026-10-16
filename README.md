@@ -1,4 +1,4 @@
-# Clark Kent Gomez — Developer & Digital Designer Portfolio
+# Personal Portfolio — Developer & Digital Designer Portfolio
 
 Welcome to my personal web portfolio! I'm **Clark Kent Gomez**, a 4th-year BSIT student, frontend developer, and digital designer based in Cebu, Philippines.
 
