@@ -32,13 +32,13 @@ export const visualWorks = [
   },
   {
     id: '02',
-    title: 'Kinetic Type Manifesto',
-    category: 'Typography',
-    tools: 'Photoshop · Illustrator',
-    year: '2025',
-    ratio: '3/4',
-    image: null, // Replace with './works/poster-02.jpg'
-    caption: 'Oversized typographic print study testing distortion, letterform weight contrast, and ink textures.',
+    title: 'Need a Website? — Web & App Design',
+    category: 'Posters',
+    tools: 'Photoshop · Figma',
+    year: '2026',
+    ratio: '2/3',
+    image: './works/Frame.jpg',
+    caption: 'Commercial promotional poster showcasing custom web and app development capabilities, featuring a 3D perspective fan of responsive digital interfaces set against atmospheric cyan volumetric lighting.',
   },
   {
     id: '03',
