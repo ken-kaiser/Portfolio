@@ -6,7 +6,7 @@ Built with high visual intentionality: curated HSL-balanced paper/ink color toke
 
 ---
 
-## ⚡ Tech Stack
+## Tech Stack
 
 - **Core**: HTML5, Vanilla JavaScript (ESModules)
 - **Styling**: Vanilla CSS3 + Tailwind CSS v4
@@ -15,7 +15,7 @@ Built with high visual intentionality: curated HSL-balanced paper/ink color toke
 
 ---
 
-## 📂 Featured Work
+## Featured Work
 
 ### 01 / Flagship Web Applications
 1. **[Presentia](https://presentia.venki050524.workers.dev/)** — AI-Powered Facial Recognition Attendance Management System
@@ -31,7 +31,7 @@ Built with high visual intentionality: curated HSL-balanced paper/ink color toke
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v18 or higher recommended)
@@ -67,7 +67,7 @@ npm run preview
 
 ---
 
-## 👤 Author
+## Author
 
 **Clark Kent Gomez**  
 - **Email**: [contactclark20@gmail.com](mailto:contactclark20@gmail.com)  
@@ -76,6 +76,6 @@ npm run preview
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the [MIT License](LICENSE).
