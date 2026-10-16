@@ -1,0 +1,423 @@
+@import 'tailwindcss';
+
+/* ───────────────────────────────────────────────────────────
+   DESIGN TOKENS
+   Limited palette: paper / ink / acid / surface.
+   `mute` is a darkened ink tone for secondary text only
+   (≈6:1 contrast on paper — passes WCAG AA).
+   ─────────────────────────────────────────────────────────── */
+@theme {
+  --color-paper: #f2f0e8;
+  --color-ink: #171717;
+  --color-acid: #d7ff00;
+  --color-surface: #e4e1d7;
+  --color-mute: #57554f;
+
+  --font-display: 'Space Grotesk', 'Archivo', system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  --ease-snap: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --nav-h: 3.5rem;
+}
+
+/* Page gutters: 16px on small phones → 48px on wide screens. */
+@utility px-page {
+  padding-inline: clamp(1rem, 3.2vw, 3rem);
+}
+
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ───────────────────────────────────────────────────────────
+   BASE
+   ─────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-acid);
+    color: var(--color-ink);
+  }
+
+  /* Sections land below the sticky nav when jumped to. */
+  [id] {
+    scroll-margin-top: calc(var(--nav-h) + 0.5rem);
+  }
+
+  /* One clear, high-contrast focus style everywhere. */
+  :focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 3px;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--color-acid);
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────
+   COMPONENTS
+   ─────────────────────────────────────────────────────────── */
+@layer components {
+  /* The page "sheet": a bordered column the whole site sits in. */
+  .sheet {
+    max-width: 1600px;
+    margin-inline: auto;
+  }
+  @media (min-width: 768px) {
+    .sheet {
+      border-inline: 1px solid var(--color-ink);
+    }
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 0.75rem;
+    top: -4rem;
+    z-index: 100;
+    background: var(--color-acid);
+    border: 1px solid var(--color-ink);
+    padding: 0.6rem 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+  .skip-link:focus {
+    top: 0.75rem;
+  }
+
+  /* ── Type ─────────────────────────────────────────────── */
+  .hero-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 0.86;
+    letter-spacing: -0.05em;
+    /* Sized so the longest line ("I MAKE THINGS WORK.") spans the sheet. */
+    font-size: clamp(3.25rem, 14.2vw, 7rem);
+  }
+  @media (min-width: 1024px) {
+    .hero-title {
+      font-size: clamp(5rem, 8.9vw, 9.25rem);
+    }
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    font-size: clamp(2.5rem, 7.4vw, 6.5rem);
+    text-wrap: balance;
+  }
+
+  .project-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    font-size: clamp(2rem, 4vw, 3.75rem);
+  }
+
+  /* Acid highlight for single words. */
+  .hl {
+    background: var(--color-acid);
+    color: var(--color-ink);
+    padding-inline: 0.06em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* ── Buttons ──────────────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    min-height: 3.25rem;
+    padding: 0.85rem 1.25rem;
+    border: 1px solid var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: 0 0 0 var(--color-ink);
+    transition:
+      transform 160ms var(--ease-snap),
+      box-shadow 160ms var(--ease-snap),
+      background-color 160ms,
+      color 160ms;
+  }
+  .btn:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
+  .btn:active {
+    transform: translate(0, 0);
+    box-shadow: 0 0 0 var(--color-ink);
+  }
+  .btn[aria-disabled='true'],
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  .btn-primary {
+    background: var(--color-acid);
+    color: var(--color-ink);
+  }
+  .btn-ghost {
+    background: transparent;
+  }
+  .btn-ghost:hover {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .btn .arrow {
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  /* ── Status dot ───────────────────────────────────────── */
+  .dot {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    background: var(--color-acid);
+    border: 1px solid var(--color-ink);
+    flex: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .dot-live {
+      animation: blink 2.4s steps(1) infinite;
+    }
+  }
+  @keyframes blink {
+    50% {
+      background: transparent;
+    }
+  }
+
+  /* ── Nav ──────────────────────────────────────────────── */
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 100%;
+    padding-inline: 1rem;
+    border-left: 1px solid var(--color-ink);
+    transition: background-color 120ms;
+  }
+  .nav-link:hover {
+    background: var(--color-surface);
+  }
+  .nav-link[aria-current='location'] {
+    background: var(--color-acid);
+  }
+
+  /* ── "To confirm" marker for unknown facts ────────────── */
+  .tbc {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px dashed currentColor;
+    padding: 0.05rem 0.35rem;
+    opacity: 0.75;
+  }
+
+  /* Editable writing prompt inside case studies. */
+  .todo {
+    border: 1px dashed var(--color-ink);
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent 0 10px,
+      color-mix(in srgb, var(--color-ink) 4%, transparent) 10px 11px
+    );
+    padding: 1rem 1.15rem;
+  }
+
+  /* ── Media frame + placeholders ──────────────────────── */
+  .frame {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-ink);
+    background: var(--color-surface);
+  }
+  .frame > img,
+  .frame > .ph {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms var(--ease-snap);
+  }
+
+  .ph {
+    position: relative;
+    display: grid;
+    place-items: center;
+    color: var(--color-ink);
+  }
+  .ph-grid {
+    background-color: var(--color-paper);
+    background-image:
+      linear-gradient(var(--color-ink) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-ink) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-position: -1px -1px;
+    background-blend-mode: normal;
+  }
+  .ph-grid::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--color-paper) 82%, transparent);
+  }
+  .ph-hatch {
+    background: repeating-linear-gradient(
+      45deg,
+      var(--color-surface) 0 12px,
+      color-mix(in srgb, var(--color-ink) 18%, var(--color-surface)) 12px 13px
+    );
+  }
+  .ph-form {
+    background-color: var(--color-surface);
+    background-image: radial-gradient(var(--color-ink) 1px, transparent 1.2px);
+    background-size: 14px 14px;
+  }
+  .ph-form::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+  }
+  .ph-type {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .ph-plain {
+    background: var(--color-surface);
+  }
+
+  /* Registration ticks in the four corners. */
+  .ph .tick {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: currentColor;
+    border-style: solid;
+    border-width: 0;
+  }
+  .ph .tick.tl { top: 10px; left: 10px; border-top-width: 1px; border-left-width: 1px; }
+  .ph .tick.tr { top: 10px; right: 10px; border-top-width: 1px; border-right-width: 1px; }
+  .ph .tick.bl { bottom: 10px; left: 10px; border-bottom-width: 1px; border-left-width: 1px; }
+  .ph .tick.br { bottom: 10px; right: 10px; border-bottom-width: 1px; border-right-width: 1px; }
+
+  .ph .ph-meta {
+    position: absolute;
+    left: 1.75rem;
+    right: 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  /* ── Project card interaction ─────────────────────────── */
+  .project-link {
+    display: block;
+    height: 100%;
+    transition: background-color 200ms;
+  }
+  .project-link .go {
+    transition:
+      transform 200ms var(--ease-snap),
+      background-color 200ms;
+  }
+  .project-link:hover .go,
+  .project-link:focus-visible .go {
+    background: var(--color-acid);
+    transform: translate(3px, -3px);
+  }
+  .project-link:hover .frame > *,
+  .project-link:focus-visible .frame > * {
+    transform: scale(1.025);
+  }
+  .project-link:hover .project-title span,
+  .project-link:focus-visible .project-title span {
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.12em;
+  }
+  .project-link:focus-visible {
+    outline-offset: -6px;
+  }
+
+  /* Big link rows (contact). */
+  .row-link {
+    transition:
+      background-color 160ms,
+      color 160ms,
+      padding 200ms var(--ease-snap);
+  }
+  .row-link:hover,
+  .row-link:focus-visible {
+    background: var(--color-acid);
+    color: var(--color-ink);
+  }
+  .row-link .row-arrow {
+    transition: transform 200ms var(--ease-snap);
+  }
+  .row-link:hover .row-arrow,
+  .row-link:focus-visible .row-arrow {
+    transform: translate(4px, -4px);
+  }
+
+  /* ── Subtle motion ── */
+  @media (prefers-reduced-motion: no-preference) {
+    .js-motion .rise {
+      opacity: 0;
+      transform: translateY(10px);
+      transition:
+        opacity 400ms ease,
+        transform 400ms var(--ease-snap);
+    }
+    .js-motion .rise.is-in {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
