@@ -45,8 +45,10 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Native smooth scrolling only as a fallback — Lenis takes over when active
+     (it adds `.lenis` to <html>; CSS smooth-scrolling would fight it). */
   @media (prefers-reduced-motion: no-preference) {
-    html {
+    html:not(.lenis) {
       scroll-behavior: smooth;
     }
   }
@@ -342,7 +344,9 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 500ms var(--ease-snap);
+    /* `scale` (hover) and `translate` (parallax) are separate properties,
+       so the per-frame parallax never restarts the hover transition. */
+    transition: scale 500ms var(--ease-snap);
   }
 
   .ph {
@@ -433,7 +437,17 @@
   }
   .project-link:hover .frame > *,
   .project-link:focus-visible .frame > * {
-    transform: scale(1.025);
+    scale: 1.025;
+  }
+
+  /* Image parallax: slight zoom gives the image room to drift inside its crop. */
+  .js-motion .frame[data-parallax-media] > img {
+    translate: 0 var(--py, 0px);
+    scale: 1.12;
+  }
+  .js-motion .project-link:hover .frame[data-parallax-media] > img,
+  .js-motion .project-link:focus-visible .frame[data-parallax-media] > img {
+    scale: 1.15;
   }
   .project-link:hover .project-title span,
   .project-link:focus-visible .project-title span {
@@ -466,45 +480,11 @@
   }
 
   /* ── Subtle motion & micro-animations ── */
-  @media (prefers-reduced-motion: no-preference) {
-    .js-motion .rise {
-      opacity: 0;
-      transform: translateY(18px);
-      transition:
-        opacity 450ms cubic-bezier(0.2, 0.8, 0.2, 1),
-        transform 450ms cubic-bezier(0.2, 0.8, 0.2, 1);
-      will-change: opacity, transform;
-    }
-    .js-motion .rise.is-in {
-      opacity: 1;
-      transform: none;
-    }
+  /* Blur-reveal rules live at the end of this file, outside any layer. */
 
-    .js-motion .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-      transition:
-        opacity 500ms cubic-bezier(0.2, 0.8, 0.2, 1),
-        transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
-      will-change: opacity, transform;
-    }
-    .js-motion .reveal.is-in {
-      opacity: 1;
-      transform: none;
-    }
-
-    /* Staggered entry for hero lines */
-    .hero-line-1 { transition-delay: 50ms; }
-    .hero-line-2 { transition-delay: 130ms; }
-    .hero-line-3 { transition-delay: 210ms; }
-
-    /* Staggered entry for poster gallery */
-    .js-motion #works-grid > article:nth-child(1) { transition-delay: 40ms; }
-    .js-motion #works-grid > article:nth-child(2) { transition-delay: 90ms; }
-    .js-motion #works-grid > article:nth-child(3) { transition-delay: 140ms; }
-    .js-motion #works-grid > article:nth-child(4) { transition-delay: 190ms; }
-    .js-motion #works-grid > article:nth-child(5) { transition-delay: 240ms; }
-    .js-motion #works-grid > article:nth-child(6) { transition-delay: 290ms; }
+  /* Sections focused by in-page links shouldn't flash an outline on click. */
+  section[tabindex='-1']:focus:not(:focus-visible) {
+    outline: none;
   }
 
   /* ── Technical Ruler-Style Scroll Progress Indicator ──── */
@@ -618,12 +598,14 @@
 
   /* Technical ruler track */
   .ruler-track {
+    --ruler-pad: 12px; /* half the thumb height: needle lands exactly on 0 / 100 */
     position: relative;
     flex: 1;
     width: 100%;
     cursor: ns-resize;
     outline: none;
     background: transparent;
+    touch-action: none; /* allow drag-scrubbing on touch screens */
   }
   .ruler-track:focus-visible {
     box-shadow: inset 0 0 0 2px var(--color-ink);
@@ -652,6 +634,9 @@
     display: block;
     background-color: rgba(23, 23, 23, 0.22); /* Minor tick: light gray */
     width: 3.5px;
+    /* --vs: velocity stretch, written per frame by RulerScrollbar.js */
+    transform-origin: left center;
+    transform: scaleX(var(--vs, 1));
     transition: width 120ms ease, background-color 150ms ease;
   }
   @media (min-width: 1024px) {
@@ -762,4 +747,116 @@
       font-size: 8.5px;
     }
   }
+
+  /* Hover ghost: previews where a click on the rail will land */
+  .ruler-ghost {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 9;
+    transition: opacity 140ms ease;
+    will-change: transform;
+  }
+  .ruler-ghost-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 2px;
+    background: var(--color-ink);
+  }
+  .ruler-ghost-pct {
+    position: absolute;
+    right: calc(100% + 6px);
+    top: 0;
+    transform: translateY(-50%);
+    padding: 2px 5px;
+    background: var(--color-ink);
+    color: var(--ruler-accent);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .ruler-scrollbar.is-hovering:not(.is-dragging) .ruler-ghost {
+    opacity: 1;
+  }
+
+  /* Load cascade: ticks draw in from the edge, top-down */
+  @media (prefers-reduced-motion: no-preference) {
+    .ruler-tick-line {
+      animation: ruler-tick-in 700ms var(--ease-snap) both;
+      animation-delay: calc(var(--i, 0) * 14ms + 150ms);
+    }
+    .ruler-tick-text {
+      animation: ruler-fade-in 400ms ease both;
+      animation-delay: calc(var(--i, 0) * 14ms + 350ms);
+    }
+    .ruler-thumb {
+      animation: ruler-fade-in 500ms ease 650ms both;
+    }
+  }
+  @keyframes ruler-tick-in {
+    from { scale: 0 1; }
+    to { scale: 1 1; }
+  }
+  @keyframes ruler-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+/* ───────────────────────────────────────────────────────────
+   BLUR REVEAL (unlayered on purpose)
+   Elements rise out of an 8px blur into focus as they scroll into
+   view — timing mirrors getartcraft.com (0.9s, power3.out).
+   Kept outside @layer so it outranks utilities such as
+   `transition-all` while animating; main.js strips the classes
+   once the transition settles, handing control back to Tailwind.
+   ─────────────────────────────────────────────────────────── */
+:root {
+  --ease-reveal: cubic-bezier(0.215, 0.61, 0.355, 1); /* power3.out */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js-motion .rise,
+  .js-motion .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(8px);
+    transition:
+      opacity 900ms var(--ease-reveal),
+      transform 900ms var(--ease-reveal),
+      filter 900ms var(--ease-reveal);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform, filter;
+  }
+  .js-motion .reveal {
+    transform: translateY(28px);
+  }
+  .js-motion .rise.is-in,
+  .js-motion .reveal.is-in {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+
+  /* Staggered entry for hero lines */
+  .hero-line-1 { --reveal-delay: 50ms; }
+  .hero-line-2 { --reveal-delay: 150ms; }
+  .hero-line-3 { --reveal-delay: 250ms; }
+
+  /* Staggered entry for poster gallery */
+  .js-motion #works-grid > article:nth-child(1) { --reveal-delay: 40ms; }
+  .js-motion #works-grid > article:nth-child(2) { --reveal-delay: 100ms; }
+  .js-motion #works-grid > article:nth-child(3) { --reveal-delay: 160ms; }
+  .js-motion #works-grid > article:nth-child(4) { --reveal-delay: 220ms; }
+  .js-motion #works-grid > article:nth-child(5) { --reveal-delay: 280ms; }
+  .js-motion #works-grid > article:nth-child(6) { --reveal-delay: 340ms; }
 }

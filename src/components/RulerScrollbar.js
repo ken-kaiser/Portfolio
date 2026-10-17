@@ -6,11 +6,34 @@
  *  edge of the viewport, featuring evenly spaced horizontal tick marks,
  *  numbered scroll-position markers, and a small technical blue
  *  percentage indicator that updates in real time.
+ *
+ *  Upgrades (inspired by getartcraft.com's scroll rail):
+ *   • Driven by the shared Lenis loop — jumps & drags glide.
+ *   • Velocity-reactive ticks stretch near the needle on fast scrolls.
+ *   • Hover "ghost" line previews where a click will land.
+ *   • Drag-scrub lerps the page after the cursor instead of snapping.
+ *   • Ticks draw in top-down on page load (CSS, see main.css).
  */
+import {
+  onScrollFrame,
+  getScrollState,
+  scrollToTarget,
+  scrollByAmount,
+  wakeScrollLoop,
+} from '../lib/smoothScroll.js';
+
+/* Tuning */
+const VEL_RADIUS = 90; // track px around the needle whose ticks react to scroll speed
+const VEL_STRETCH = 1.4; // extra tick length at full speed (1.4 → up to 2.4× long)
+const VEL_FULL = 32; // px/frame treated as "full speed"
+const DRAG_LERP = 0.18; // how tightly the page chases the cursor while dragging
+
+const clamp = (min, v, max) => Math.min(max, Math.max(min, v));
 
 export function RulerScrollbar() {
   // Generate evenly spaced horizontal tick marks from 0% to 100% at 2.5% intervals
   const ticks = [];
+  let index = 0;
   for (let i = 0; i <= 100; i += 2.5) {
     const isMajor = i % 10 === 0;
     const isMedium = !isMajor && i % 5 === 0;
@@ -25,11 +48,13 @@ export function RulerScrollbar() {
       type = 'ruler-tick-medium';
     }
 
+    // Ticks are inset by half the thumb height so the needle lands exactly on 0 and 100.
     ticks.push(`
-      <div class="ruler-tick ${type}" style="top: ${i}%;" data-tick-pct="${i}" aria-hidden="true">
+      <div class="ruler-tick ${type}" style="top: calc(var(--ruler-pad) + (100% - 2 * var(--ruler-pad)) * ${i / 100}); --i: ${index};" data-tick-pct="${i}" aria-hidden="true">
         <span class="ruler-tick-line"></span>
         ${label ? `<span class="ruler-tick-text">${label}</span>` : ''}
       </div>`);
+    index++;
   }
 
   return `
@@ -46,6 +71,12 @@ export function RulerScrollbar() {
            aria-label="Scroll progress position" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
         <div class="ruler-ticks" aria-hidden="true">
           ${ticks.join('')}
+        </div>
+
+        <!-- Hover ghost: previews where a click will jump to -->
+        <div id="ruler-ghost" class="ruler-ghost" aria-hidden="true">
+          <span class="ruler-ghost-line"></span>
+          <span id="ruler-ghost-pct" class="ruler-ghost-pct">00%</span>
         </div>
 
         <!-- Small Blue Percentage Indicator with Technical Needle -->
@@ -69,124 +100,158 @@ export function initRulerScrollbar() {
   const track = document.getElementById('ruler-track');
   const thumb = document.getElementById('ruler-thumb');
   const pct = document.getElementById('ruler-pct');
+  const ghost = document.getElementById('ruler-ghost');
+  const ghostPct = document.getElementById('ruler-ghost-pct');
   const progressBar = document.getElementById('scroll-progress');
   const btnTop = document.querySelector('[data-ruler-top]');
   const btnBottom = document.querySelector('[data-ruler-bottom]');
 
   if (!ruler || !track || !thumb || !pct) return;
 
-  const majorTicks = track.querySelectorAll('.ruler-tick-major');
+  const ticks = [...track.querySelectorAll('.ruler-tick')].map((el) => ({
+    el,
+    line: el.querySelector('.ruler-tick-line'),
+    pct: parseFloat(el.dataset.tickPct),
+    major: el.classList.contains('ruler-tick-major'),
+    scale: 1,
+  }));
+
+  // Cached geometry (refreshed by ResizeObserver, never read per frame)
+  let trackH = track.clientHeight;
+  let thumbH = thumb.offsetHeight || 24;
+  const available = () => Math.max(0, trackH - thumbH);
+  const measure = () => {
+    trackH = track.clientHeight;
+    thumbH = thumb.offsetHeight || 24;
+  };
+
   let isDragging = false;
-  let ticking = false;
+  let grabOffset = 0;
+  let activeMajor = -1;
+  let lastPct = -1;
 
-  const update = () => {
-    const docHeight = document.documentElement.scrollHeight;
-    const winHeight = window.innerHeight;
-    const maxScroll = docHeight - winHeight;
-
-    const progress = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+  const update = (state = getScrollState()) => {
+    const { y, max, velocity } = state;
+    const progress = max > 0 ? clamp(0, y / max, 1) : 0;
     const pctVal = Math.round(progress * 100);
+    const thumbY = progress * available();
 
-    const trackHeight = track.clientHeight;
-    const thumbHeight = thumb.clientHeight || 24;
-    const available = Math.max(0, trackHeight - thumbHeight);
-    const thumbY = progress * available;
+    thumb.style.transform = `translate3d(0, ${thumbY.toFixed(2)}px, 0)`;
 
-    thumb.style.transform = `translate3d(0, ${thumbY}px, 0)`;
-    pct.textContent = `${pctVal}%`;
-    track.setAttribute('aria-valuenow', String(pctVal));
+    if (pctVal !== lastPct) {
+      pct.textContent = `${pctVal}%`;
+      track.setAttribute('aria-valuenow', String(pctVal));
+      lastPct = pctVal;
+    }
 
     if (progressBar) {
       progressBar.style.transform = `scaleX(${progress})`;
     }
 
-    // Technical indicator: illuminate the nearest major calibration marker in subtle blue
+    // Technical indicator: illuminate the nearest major calibration marker
     const nearestMajor = Math.round(progress * 10) * 10;
-    majorTicks.forEach((tick) => {
-      const tickVal = parseInt(tick.dataset.tickPct, 10);
-      if (tickVal === nearestMajor) {
-        tick.classList.add('is-active-tick');
-      } else {
-        tick.classList.remove('is-active-tick');
+    if (nearestMajor !== activeMajor) {
+      ticks.forEach((t) => t.major && t.el.classList.toggle('is-active-tick', t.pct === nearestMajor));
+      activeMajor = nearestMajor;
+    }
+
+    // Velocity-reactive ticks: the faster you scroll, the longer the ticks around the needle
+    const intensity = Math.min(1, Math.abs(velocity) / VEL_FULL);
+    const needleY = thumbY + thumbH / 2;
+    for (const t of ticks) {
+      let s = 1;
+      if (intensity > 0.002) {
+        const d = Math.abs(thumbH / 2 + (t.pct / 100) * available() - needleY);
+        if (d < VEL_RADIUS) {
+          const f = 1 - d / VEL_RADIUS;
+          s = 1 + VEL_STRETCH * intensity * f * f;
+        }
       }
-    });
-
-    ticking = false;
-  };
-
-  const onScroll = () => {
-    if (!ticking) {
-      requestAnimationFrame(update);
-      ticking = true;
+      if (Math.abs(s - t.scale) > 0.004) {
+        t.scale = s;
+        t.line.style.setProperty('--vs', s.toFixed(3));
+      }
     }
   };
 
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
+  onScrollFrame(update);
 
-  // Update immediately when route changes or DOM height changes
   if ('ResizeObserver' in window) {
-    const ro = new ResizeObserver(() => {
-      if (!ticking) {
-        requestAnimationFrame(update);
-        ticking = true;
-      }
-    });
-    ro.observe(document.body);
+    new ResizeObserver(() => {
+      measure();
+      update();
+    }).observe(track);
+    // Page height changes (route swaps, lazy content) → recompute progress
+    new ResizeObserver(wakeScrollLoop).observe(document.body);
   }
 
-  const scrollToRatio = (ratio, smooth = true) => {
-    const docHeight = document.documentElement.scrollHeight;
-    const winHeight = window.innerHeight;
-    const maxScroll = Math.max(0, docHeight - winHeight);
-    const clamped = Math.min(1, Math.max(0, ratio));
-    window.scrollTo({
-      top: clamped * maxScroll,
-      behavior: smooth ? 'smooth' : 'instant',
-    });
+  /* ── Pointer helpers ───────────────────────────────────── */
+  const pointerRatio = (clientY, offset = 0) => {
+    const rect = track.getBoundingClientRect();
+    const avail = rect.height - thumbH;
+    if (avail <= 0) return 0;
+    return clamp(0, (clientY - rect.top - thumbH / 2 - offset) / avail, 1);
+  };
+
+  const scrollToRatio = (ratio, mode = 'jump') => {
+    const { max } = getScrollState();
+    const y = ratio * max;
+    if (mode === 'drag') scrollToTarget(y, { lerp: DRAG_LERP });
+    else scrollToTarget(y);
+  };
+
+  const showGhost = (clientY) => {
+    if (!ghost) return;
+    const ratio = pointerRatio(clientY);
+    ghost.style.transform = `translate3d(0, ${(thumbH / 2 + ratio * available()).toFixed(1)}px, 0)`;
+    if (ghostPct) ghostPct.textContent = `${Math.round(ratio * 100)}%`;
+    ruler.classList.add('is-hovering');
   };
 
   // Top/bottom calibration jump buttons
-  btnTop?.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  btnTop?.addEventListener('click', () => scrollToTarget(0));
+  btnBottom?.addEventListener('click', () => scrollToTarget(getScrollState().max));
 
-  btnBottom?.addEventListener('click', () => {
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    window.scrollTo({ top: max, behavior: 'smooth' });
-  });
-
-  // Track click & scrub interactions
-  const handlePointerScrub = (e, smooth = false) => {
-    const rect = track.getBoundingClientRect();
-    const thumbHeight = thumb.clientHeight || 24;
-    const available = rect.height - thumbHeight;
-    if (available <= 0) return;
-
-    const clickY = e.clientY - rect.top - thumbHeight / 2;
-    const ratio = clickY / available;
-    scrollToRatio(ratio, smooth);
-  };
-
+  // Track click (glide) & drag (lerp-chase) interactions
   track.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0) return;
     isDragging = true;
-    thumb.classList.add('is-dragging');
     track.setPointerCapture(e.pointerId);
-    handlePointerScrub(e, false);
+    ruler.classList.add('is-dragging');
+    thumb.classList.add('is-dragging');
+
+    if (thumb.contains(e.target)) {
+      // Grabbed the thumb: keep the cursor's offset so it doesn't jump
+      const tr = thumb.getBoundingClientRect();
+      grabOffset = e.clientY - (tr.top + tr.height / 2);
+    } else {
+      grabOffset = 0;
+      scrollToRatio(pointerRatio(e.clientY), 'jump');
+    }
   });
 
   track.addEventListener('pointermove', (e) => {
-    if (!isDragging) return;
-    handlePointerScrub(e, false);
+    if (isDragging) {
+      scrollToRatio(pointerRatio(e.clientY, grabOffset), 'drag');
+      return;
+    }
+    if (e.pointerType === 'mouse') showGhost(e.clientY);
+  });
+
+  track.addEventListener('pointerleave', () => {
+    if (!isDragging) ruler.classList.remove('is-hovering');
   });
 
   const stopDrag = (e) => {
     if (!isDragging) return;
     isDragging = false;
+    ruler.classList.remove('is-dragging');
     thumb.classList.remove('is-dragging');
     try {
       track.releasePointerCapture(e.pointerId);
     } catch (_) {}
+    if (e.pointerType === 'mouse' && track.matches(':hover')) showGhost(e.clientY);
+    else ruler.classList.remove('is-hovering');
   };
 
   track.addEventListener('pointerup', stopDrag);
@@ -195,34 +260,34 @@ export function initRulerScrollbar() {
   // Keyboard navigation
   track.addEventListener('keydown', (e) => {
     const step = 90;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const page = window.innerHeight * 0.8;
 
     switch (e.key) {
       case 'ArrowUp':
       case 'ArrowLeft':
         e.preventDefault();
-        window.scrollBy({ top: -step, behavior: 'smooth' });
+        scrollByAmount(-step);
         break;
       case 'ArrowDown':
       case 'ArrowRight':
         e.preventDefault();
-        window.scrollBy({ top: step, behavior: 'smooth' });
+        scrollByAmount(step);
         break;
       case 'PageUp':
         e.preventDefault();
-        window.scrollBy({ top: -window.innerHeight * 0.8, behavior: 'smooth' });
+        scrollByAmount(-page);
         break;
       case 'PageDown':
         e.preventDefault();
-        window.scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' });
+        scrollByAmount(page);
         break;
       case 'Home':
         e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        scrollToTarget(0);
         break;
       case 'End':
         e.preventDefault();
-        window.scrollTo({ top: max, behavior: 'smooth' });
+        scrollToTarget(getScrollState().max);
         break;
     }
   });
@@ -230,5 +295,5 @@ export function initRulerScrollbar() {
   // Initial calculation
   update();
 
-  return update;
+  return () => update();
 }

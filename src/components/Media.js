@@ -30,7 +30,7 @@ export function Media({
 
   if (image && image.src) {
     return `
-      <div class="${wrap}" style="${style}">
+      <div class="${wrap}" style="${style}" data-parallax-media>
         <img src="${esc(image.src)}" alt="${esc(image.alt || '')}"
              ${lazy ? 'loading="lazy" decoding="async"' : 'fetchpriority="high"'} />
       </div>`;

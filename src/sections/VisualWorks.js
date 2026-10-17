@@ -211,7 +211,8 @@ export function VisualWorks() {
            class="fixed inset-0 z-[100] hidden items-center justify-center bg-ink/85 backdrop-blur-sm p-3 md:p-6"
            role="dialog"
            aria-modal="true"
-           aria-labelledby="lightbox-title">
+           aria-labelledby="lightbox-title"
+           data-lenis-prevent>
         <div class="relative flex flex-col max-h-[95vh] max-w-5xl w-full border-2 border-ink bg-paper shadow-[8px_8px_0_var(--color-acid)] overflow-hidden">
           <!-- Lightbox Top bar -->
           <div class="flex items-center justify-between border-b border-ink bg-surface px-4 py-3 label">

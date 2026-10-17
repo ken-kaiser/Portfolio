@@ -31,7 +31,7 @@ export function Hero() {
 
       <!-- Headline -->
       <div class="px-page relative pt-10 pb-10 md:pt-14 lg:pt-16 lg:pb-14">
-        <h1 id="hero-title" class="hero-title">
+        <h1 id="hero-title" class="hero-title" data-parallax="0.06" data-parallax-fade>
           <span class="block rise hero-line-1">I design.</span>
           <span class="block lg:pl-[1.15em] rise hero-line-2">I build.</span>
           <span class="block rise hero-line-3">I make things <span class="hl">work.</span></span>
@@ -45,7 +45,7 @@ export function Hero() {
       <!-- Intro + actions -->
       <div class="grid border-t border-ink lg:grid-cols-12">
         <div class="px-page hidden border-r border-ink py-8 lg:col-span-2 lg:flex lg:flex-col lg:justify-between">
-          <span class="font-display text-6xl leading-none font-bold" aria-hidden="true">↘</span>
+          <span class="font-display text-6xl leading-none font-bold" aria-hidden="true" data-parallax="0.18">↘</span>
           <span class="label text-mute">Scroll / Index</span>
         </div>
 
