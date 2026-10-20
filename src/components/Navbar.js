@@ -82,6 +82,15 @@ export function initNavbar() {
     icon.textContent = open ? '×' : '+';
   };
 
+  // Logo click → full page refresh
+  const logoLink = document.querySelector('a[href="#top"]');
+  if (logoLink) {
+    logoLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.reload();
+    });
+  }
+
   toggle.addEventListener('click', () => setOpen(menu.hidden));
   menu.addEventListener('click', (e) => {
     if (e.target.closest('a')) setOpen(false);
