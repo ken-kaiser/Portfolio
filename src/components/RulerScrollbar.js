@@ -1,19 +1,4 @@
-/**
- * ─────────────────────────────────────────────────────────────
- *  TECHNICAL RULER-STYLE SCROLL PROGRESS INDICATOR
- * ─────────────────────────────────────────────────────────────
- *  Minimalist vertical measuring instrument fixed to the right
- *  edge of the viewport, featuring evenly spaced horizontal tick marks,
- *  numbered scroll-position markers, and a small technical blue
- *  percentage indicator that updates in real time.
- *
- *  Upgrades (inspired by getartcraft.com's scroll rail):
- *   • Driven by the shared Lenis loop — jumps & drags glide.
- *   • Velocity-reactive ticks stretch near the needle on fast scrolls.
- *   • Hover "ghost" line previews where a click will land.
- *   • Drag-scrub lerps the page after the cursor instead of snapping.
- *   • Ticks draw in top-down on page load (CSS, see main.css).
- */
+// Vertical ruler scrollbar on the right edge — handles smooth dragging, click jumps, and percentage readout
 import {
   onScrollFrame,
   getScrollState,
@@ -22,16 +7,16 @@ import {
   wakeScrollLoop,
 } from '../lib/smoothScroll.js';
 
-/* Tuning */
-const VEL_RADIUS = 90; // track px around the needle whose ticks react to scroll speed
-const VEL_STRETCH = 1.4; // extra tick length at full speed (1.4 → up to 2.4× long)
-const VEL_FULL = 32; // px/frame treated as "full speed"
-const DRAG_LERP = 0.18; // how tightly the page chases the cursor while dragging
+// Tuning constants for tick animations and dragging
+const VEL_RADIUS = 90; // pixel distance around the thumb where ticks stretch
+const VEL_STRETCH = 1.4; // extra stretch multiplier when scrolling fast
+const VEL_FULL = 32; // scroll velocity considered full speed
+const DRAG_LERP = 0.18; // smoothness factor when dragging the page
 
 const clamp = (min, v, max) => Math.min(max, Math.max(min, v));
 
 export function RulerScrollbar() {
-  // Generate evenly spaced horizontal tick marks from 0% to 100% at 2.5% intervals
+  // 40 ticks spaced out at 2.5% intervals
   const ticks = [];
   let index = 0;
   for (let i = 0; i <= 100; i += 2.5) {
@@ -48,7 +33,7 @@ export function RulerScrollbar() {
       type = 'ruler-tick-medium';
     }
 
-    // Ticks are inset by half the thumb height so the needle lands exactly on 0 and 100.
+    // Inset ticks by half the thumb height so 0% and 100% align neatly with the needle
     ticks.push(`
       <div class="ruler-tick ${type}" style="top: calc(var(--ruler-pad) + (100% - 2 * var(--ruler-pad)) * ${i / 100}); --i: ${index};" data-tick-pct="${i}" aria-hidden="true">
         <span class="ruler-tick-line"></span>
@@ -59,34 +44,34 @@ export function RulerScrollbar() {
 
   return `
     <aside id="ruler-scrollbar" class="ruler-scrollbar" aria-label="Technical scroll progress ruler" role="region">
-      <!-- Top Instrument Calibration / Return to Top -->
+      <!-- Scroll to top button -->
       <button type="button" class="ruler-nav-btn ruler-nav-top" data-ruler-top title="Return to 00% (Top)" aria-label="Scroll to top">
         <span class="ruler-btn-pip" aria-hidden="true"></span>
         <span class="ruler-btn-num">00</span>
         <span class="ruler-btn-tag">Y-AXIS</span>
       </button>
 
-      <!-- Minimalist Vertical Track with Measuring Scale -->
+      <!-- Ruler track and tick lines -->
       <div id="ruler-track" class="ruler-track" role="slider" tabindex="0"
            aria-label="Scroll progress position" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
         <div class="ruler-ticks" aria-hidden="true">
           ${ticks.join('')}
         </div>
 
-        <!-- Hover ghost: previews where a click will jump to -->
+        <!-- Hover preview line -->
         <div id="ruler-ghost" class="ruler-ghost" aria-hidden="true">
           <span class="ruler-ghost-line"></span>
           <span id="ruler-ghost-pct" class="ruler-ghost-pct">00%</span>
         </div>
 
-        <!-- Small Blue Percentage Indicator with Technical Needle -->
+        <!-- Current scroll position needle -->
         <div id="ruler-thumb" class="ruler-thumb" aria-hidden="true">
           <span class="ruler-needle"></span>
           <span id="ruler-pct" class="ruler-pct">00%</span>
         </div>
       </div>
 
-      <!-- Bottom Instrument Calibration / Jump to End -->
+      <!-- Scroll to bottom button -->
       <button type="button" class="ruler-nav-btn ruler-nav-bottom" data-ruler-bottom title="Jump to 100% (End)" aria-label="Scroll to end">
         <span class="ruler-btn-pip" aria-hidden="true"></span>
         <span class="ruler-btn-num">100</span>
@@ -116,7 +101,7 @@ export function initRulerScrollbar() {
     scale: 1,
   }));
 
-  // Cached geometry (refreshed by ResizeObserver, never read per frame)
+  // Cache dimensions to avoid recalculating layout on every animation frame
   let trackH = track.clientHeight;
   let thumbH = thumb.offsetHeight || 24;
   const available = () => Math.max(0, trackH - thumbH);
@@ -148,14 +133,14 @@ export function initRulerScrollbar() {
       progressBar.style.transform = `scaleX(${progress})`;
     }
 
-    // Technical indicator: illuminate the nearest major calibration marker
+    // Highlight the nearest 10% marker
     const nearestMajor = Math.round(progress * 10) * 10;
     if (nearestMajor !== activeMajor) {
       ticks.forEach((t) => t.major && t.el.classList.toggle('is-active-tick', t.pct === nearestMajor));
       activeMajor = nearestMajor;
     }
 
-    // Velocity-reactive ticks: the faster you scroll, the longer the ticks around the needle
+    // Stretch ticks near the needle on quick scrolls
     const intensity = Math.min(1, Math.abs(velocity) / VEL_FULL);
     const needleY = thumbY + thumbH / 2;
     for (const t of ticks) {
@@ -181,11 +166,11 @@ export function initRulerScrollbar() {
       measure();
       update();
     }).observe(track);
-    // Page height changes (route swaps, lazy content) → recompute progress
+    // Recalculate if page height changes (e.g. dynamic content or route changes)
     new ResizeObserver(wakeScrollLoop).observe(document.body);
   }
 
-  /* ── Pointer helpers ───────────────────────────────────── */
+  // Pointer & scroll math helpers
   const pointerRatio = (clientY, offset = 0) => {
     const rect = track.getBoundingClientRect();
     const avail = rect.height - thumbH;
@@ -208,11 +193,11 @@ export function initRulerScrollbar() {
     ruler.classList.add('is-hovering');
   };
 
-  // Top/bottom calibration jump buttons
+  // Quick jump buttons (top / bottom)
   btnTop?.addEventListener('click', () => scrollToTarget(0));
   btnBottom?.addEventListener('click', () => scrollToTarget(getScrollState().max));
 
-  // Track click (glide) & drag (lerp-chase) interactions
+  // Click-to-jump and drag interactions
   track.addEventListener('pointerdown', (e) => {
     if (e.button !== 0) return;
     isDragging = true;
@@ -221,7 +206,7 @@ export function initRulerScrollbar() {
     thumb.classList.add('is-dragging');
 
     if (thumb.contains(e.target)) {
-      // Grabbed the thumb: keep the cursor's offset so it doesn't jump
+      // Keep click offset so dragging doesn't jump abruptly
       const tr = thumb.getBoundingClientRect();
       grabOffset = e.clientY - (tr.top + tr.height / 2);
     } else {
@@ -257,7 +242,7 @@ export function initRulerScrollbar() {
   track.addEventListener('pointerup', stopDrag);
   track.addEventListener('pointercancel', stopDrag);
 
-  // Keyboard navigation
+  // Keyboard controls
   track.addEventListener('keydown', (e) => {
     const step = 90;
     const page = window.innerHeight * 0.8;
@@ -292,7 +277,7 @@ export function initRulerScrollbar() {
     }
   });
 
-  // Initial calculation
+  // Set initial position on load
   update();
 
   return () => update();

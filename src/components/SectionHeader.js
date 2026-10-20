@@ -1,10 +1,6 @@
 import { esc } from '../lib/utils.js';
 
-/**
- * Section header: a ruled metadata bar + oversized heading.
- *   02 / SELECTED WORK ··········· 04 ENTRIES
- *   THINGS I'VE MADE.
- */
+// Section header with index numbering, category tag, and main heading
 export function SectionHeader({ index, label, title, aside = '', id, dark = false }) {
   const rule = dark ? 'border-paper/30' : 'border-ink';
   return `

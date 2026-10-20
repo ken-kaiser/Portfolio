@@ -1,10 +1,4 @@
-/**
- * CKG Logo Component
- * Renders the custom brutalist CKG SVG mark with adaptive ink / paper fill.
- * Path 1: C (slanted geometric)
- * Path 2: K (sharp acid accent #E3FF39)
- * Path 3: G (slanted geometric)
- */
+// CKG logo mark — 3-part SVG with an accent color on the K
 export function Logo({ className = 'h-5 w-auto', dark = false } = {}) {
   const fg = dark ? '#F1F0E8' : 'currentColor';
   return `

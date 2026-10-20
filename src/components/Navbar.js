@@ -68,7 +68,7 @@ export function Navbar() {
     </header>`;
 }
 
-/** Wire up the mobile menu + active-section highlighting. Runs once. */
+// Mobile menu toggling and keyboard controls
 export function initNavbar() {
   const toggle = document.getElementById('menu-toggle');
   const menu = document.getElementById('mobile-menu');
@@ -82,7 +82,7 @@ export function initNavbar() {
     icon.textContent = open ? '×' : '+';
   };
 
-  // Logo click → full page refresh
+  // Clicking the logo does a full page refresh instead of just jumping to the top
   const logoLink = document.querySelector('a[href="#top"]');
   if (logoLink) {
     logoLink.addEventListener('click', (e) => {
@@ -108,7 +108,7 @@ export function initNavbar() {
 
 let observer;
 
-/** Highlight the nav item for the section currently in the middle of the viewport. */
+// Updates the active nav link based on what section is currently in view
 export function trackActiveSection() {
   observer?.disconnect();
   const links = [...document.querySelectorAll('[data-nav]')];

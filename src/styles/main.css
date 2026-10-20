@@ -1,11 +1,6 @@
 @import 'tailwindcss';
 
-/* ───────────────────────────────────────────────────────────
-   DESIGN TOKENS
-   Limited palette: paper / ink / acid / surface.
-   `mute` is a darkened ink tone for secondary text only
-   (≈6:1 contrast on paper — passes WCAG AA).
-   ─────────────────────────────────────────────────────────── */
+/* Color palette & theme tokens */
 @theme {
   --color-paper: #f2f0e8;
   --color-ink: #171717;
@@ -21,7 +16,7 @@
   --nav-h: 3.5rem;
 }
 
-/* Page gutters: 16px on small phones → 48px on wide screens. */
+/* Responsive page gutters */
 @utility px-page {
   padding-inline: clamp(1rem, 3.2vw, 3rem);
 }
@@ -34,9 +29,7 @@
   text-transform: uppercase;
 }
 
-/* ───────────────────────────────────────────────────────────
-   BASE
-   ─────────────────────────────────────────────────────────── */
+/* Base styles */
 @layer base {
   html {
     background: var(--color-paper);
@@ -45,8 +38,7 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Native smooth scrolling only as a fallback — Lenis takes over when active
-     (it adds `.lenis` to <html>; CSS smooth-scrolling would fight it). */
+  /* Fallback smooth scroll if Lenis isn't running */
   @media (prefers-reduced-motion: no-preference) {
     html:not(.lenis) {
       scroll-behavior: smooth;
@@ -66,12 +58,12 @@
     color: var(--color-ink);
   }
 
-  /* Sections land below the sticky nav when jumped to. */
+  /* Offset anchor jumps below the sticky navbar */
   [id] {
     scroll-margin-top: calc(var(--nav-h) + 0.5rem);
   }
 
-  /* One clear, high-contrast focus style everywhere. */
+  /* Focus outlines */
   :focus-visible {
     outline: 3px solid var(--color-ink);
     outline-offset: 3px;
@@ -86,11 +78,9 @@
   }
 }
 
-/* ───────────────────────────────────────────────────────────
-   COMPONENTS
-   ─────────────────────────────────────────────────────────── */
+/* UI components */
 @layer components {
-  /* The page "sheet": a bordered column the whole site sits in. */
+  /* Main content container */
   .sheet {
     max-width: 1600px;
     margin-inline: auto;
@@ -117,14 +107,14 @@
     top: 0.75rem;
   }
 
-  /* ── Type ─────────────────────────────────────────────── */
+  /* Typography */
   .hero-title {
     font-family: var(--font-display);
     font-weight: 700;
     text-transform: uppercase;
     line-height: 0.86;
     letter-spacing: -0.05em;
-    /* Sized so the longest line ("I MAKE THINGS WORK.") spans the sheet. */
+    /* Scale heading to fit container width */
     font-size: clamp(3.25rem, 14.2vw, 7rem);
   }
   @media (min-width: 1024px) {
@@ -151,7 +141,7 @@
     font-size: clamp(2rem, 4vw, 3.75rem);
   }
 
-  /* Acid highlight for single words. */
+  /* Neon text highlight */
   .hl {
     background: var(--color-acid);
     color: var(--color-ink);
@@ -160,7 +150,7 @@
     -webkit-box-decoration-break: clone;
   }
 
-  /* ── Buttons ──────────────────────────────────────────── */
+  /* Buttons */
   .btn {
     display: inline-flex;
     align-items: center;
@@ -220,7 +210,7 @@
     transform: translate(2px, -2px);
   }
 
-  /* ── Status dot with telemetry radar pulse ─────────────── */
+  /* Live availability pulse dot */
   .dot {
     position: relative;
     display: inline-block;
@@ -261,7 +251,7 @@
     }
   }
 
-  /* ── Nav links ─────────────────────────────────────────── */
+  /* Nav links */
   .nav-link {
     position: relative;
     display: inline-flex;
@@ -280,7 +270,7 @@
     color: var(--color-ink);
   }
 
-  /* ── Interactive row micro-animations ─────────────────── */
+  /* Row hover effects */
   .skill-row {
     transition: background-color 160ms ease, padding-left 180ms var(--ease-snap);
   }
@@ -309,7 +299,7 @@
     box-shadow: 0 0 0 var(--color-ink);
   }
 
-  /* ── "To confirm" marker for unknown facts ────────────── */
+  /* TBC badge */
   .tbc {
     display: inline-block;
     font-family: var(--font-mono);
@@ -321,7 +311,7 @@
     opacity: 0.75;
   }
 
-  /* Editable writing prompt inside case studies. */
+  /* Placeholder note block */
   .todo {
     border: 1px dashed var(--color-ink);
     background: repeating-linear-gradient(
@@ -332,7 +322,7 @@
     padding: 1rem 1.15rem;
   }
 
-  /* ── Media frame + placeholders ──────────────────────── */
+  /* Media frames & placeholder patterns */
   .frame {
     position: relative;
     overflow: hidden;
@@ -344,8 +334,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* `scale` (hover) and `translate` (parallax) are separate properties,
-       so the per-frame parallax never restarts the hover transition. */
+    /* Separate scale from translate so parallax doesn't cancel hover zoom */
     transition: scale 500ms var(--ease-snap);
   }
 
@@ -396,7 +385,7 @@
     background: var(--color-surface);
   }
 
-  /* Registration ticks in the four corners. */
+  /* Corner tick marks */
   .ph .tick {
     position: absolute;
     width: 14px;
@@ -419,7 +408,7 @@
     gap: 1rem;
   }
 
-  /* ── Project card interaction ─────────────────────────── */
+  /* Project cards */
   .project-link {
     display: block;
     height: 100%;
@@ -440,7 +429,7 @@
     scale: 1.025;
   }
 
-  /* Image parallax: slight zoom gives the image room to drift inside its crop. */
+  /* Slight zoom so parallax image has room to move */
   .js-motion .frame[data-parallax-media] > img {
     translate: 0 var(--py, 0px);
     scale: 1.12;
@@ -459,7 +448,7 @@
     outline-offset: -6px;
   }
 
-  /* Big link rows (contact). */
+  /* Contact links */
   .row-link {
     transition:
       background-color 160ms,
@@ -479,22 +468,19 @@
     transform: translate(4px, -4px);
   }
 
-  /* ── Subtle motion & micro-animations ── */
-  /* Blur-reveal rules live at the end of this file, outside any layer. */
-
-  /* Sections focused by in-page links shouldn't flash an outline on click. */
+  /* Suppress outline on click for target sections */
   section[tabindex='-1']:focus:not(:focus-visible) {
     outline: none;
   }
 
-  /* ── Technical Ruler-Style Scroll Progress Indicator ──── */
+  /* Ruler scrollbar */
   :root {
-    --ruler-accent: var(--color-acid); /* Light green / acid #d7ff00 */
+    --ruler-accent: var(--color-acid);
     --ruler-accent-hover: #e5ff33;
     --ruler-accent-glow: rgba(215, 255, 0, 0.45);
   }
 
-  /* Universal body right-padding so page content is never obscured */
+  /* Right gutter so page content doesn't sit under the ruler */
   body {
     padding-right: 24px;
   }
@@ -504,7 +490,7 @@
     }
   }
 
-  /* Native scrollbars hidden across all platforms so ruler is the sole instrument */
+  /* Hide default browser scrollbars */
   html {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -533,7 +519,7 @@
     }
   }
 
-  /* Technical navigation buttons (TOP and END) */
+  /* Top / bottom jump buttons */
   .ruler-nav-btn {
     display: flex;
     flex-direction: column;
@@ -596,16 +582,16 @@
     }
   }
 
-  /* Technical ruler track */
+  /* Ruler track */
   .ruler-track {
-    --ruler-pad: 12px; /* half the thumb height: needle lands exactly on 0 / 100 */
+    --ruler-pad: 12px; /* half thumb height so needle reaches 0% and 100% cleanly */
     position: relative;
     flex: 1;
     width: 100%;
     cursor: ns-resize;
     outline: none;
     background: transparent;
-    touch-action: none; /* allow drag-scrubbing on touch screens */
+    touch-action: none; /* enables dragging on touch screens */
   }
   .ruler-track:focus-visible {
     box-shadow: inset 0 0 0 2px var(--color-ink);
@@ -629,13 +615,13 @@
     transition: color 150ms ease;
   }
 
-  /* Thin black and gray lines */
+  /* Tick marks */
   .ruler-tick-line {
     height: 1px;
     display: block;
-    background-color: rgba(23, 23, 23, 0.22); /* Minor tick: light gray */
+    background-color: rgba(23, 23, 23, 0.22);
     width: 3.5px;
-    /* --vs: velocity stretch, written per frame by RulerScrollbar.js */
+    /* Stretch scale controlled by scroll velocity */
     transform-origin: right center;
     transform: scaleX(var(--vs, 1));
     transition: width 120ms ease, background-color 150ms ease;
@@ -648,7 +634,7 @@
 
   .ruler-tick-medium .ruler-tick-line {
     width: 5.5px;
-    background-color: #78716c; /* Medium tick: medium gray */
+    background-color: #78716c;
   }
   @media (min-width: 1024px) {
     .ruler-tick-medium .ruler-tick-line {
@@ -658,7 +644,7 @@
 
   .ruler-tick-major .ruler-tick-line {
     width: 8px;
-    background-color: var(--color-ink); /* Major tick: thin black line */
+    background-color: var(--color-ink);
   }
   @media (min-width: 1024px) {
     .ruler-tick-major .ruler-tick-line {
@@ -680,7 +666,7 @@
     }
   }
 
-  /* Active graduation highlight */
+  /* Highlight active marker */
   .ruler-tick-major.is-active-tick .ruler-tick-line {
     background-color: var(--color-ink);
     width: 10px;
@@ -695,7 +681,7 @@
     font-weight: 700;
   }
 
-  /* Small Light Green Percentage Indicator */
+  /* Thumb indicator */
   .ruler-thumb {
     position: absolute;
     top: 0;
@@ -723,7 +709,7 @@
     box-shadow: 0 0 6px var(--ruler-accent-glow), 1px 0 0 var(--color-ink);
   }
 
-  /* Technical needle line */
+  /* Needle marker */
   .ruler-needle {
     position: absolute;
     right: 0;
@@ -749,7 +735,7 @@
     }
   }
 
-  /* Hover ghost: previews where a click on the rail will land */
+  /* Click preview line on hover */
   .ruler-ghost {
     position: absolute;
     top: 0;
@@ -789,7 +775,7 @@
     opacity: 1;
   }
 
-  /* Load cascade: ticks draw in from the edge, top-down */
+  /* Entrance animation: cascade ticks in on page load */
   @media (prefers-reduced-motion: no-preference) {
     .ruler-tick-line {
       animation: ruler-tick-in 700ms var(--ease-snap) both;
@@ -813,16 +799,9 @@
   }
 }
 
-/* ───────────────────────────────────────────────────────────
-   BLUR REVEAL (unlayered on purpose)
-   Elements rise out of an 8px blur into focus as they scroll into
-   view — timing mirrors getartcraft.com (0.9s, power3.out).
-   Kept outside @layer so it outranks utilities such as
-   `transition-all` while animating; main.js strips the classes
-   once the transition settles, handing control back to Tailwind.
-   ─────────────────────────────────────────────────────────── */
+/* Scroll reveal animations (unlayered to override utility transition classes) */
 :root {
-  --ease-reveal: cubic-bezier(0.215, 0.61, 0.355, 1); /* power3.out */
+  --ease-reveal: cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -848,12 +827,12 @@
     filter: blur(0);
   }
 
-  /* Staggered entry for hero lines */
+  /* Stagger hero text lines */
   .hero-line-1 { --reveal-delay: 50ms; }
   .hero-line-2 { --reveal-delay: 150ms; }
   .hero-line-3 { --reveal-delay: 250ms; }
 
-  /* Staggered entry for poster gallery */
+  /* Stagger work grid items */
   .js-motion #works-grid > article:nth-child(1) { --reveal-delay: 40ms; }
   .js-motion #works-grid > article:nth-child(2) { --reveal-delay: 100ms; }
   .js-motion #works-grid > article:nth-child(3) { --reveal-delay: 160ms; }

@@ -1,19 +1,6 @@
 import { esc, ratioLabel } from '../lib/utils.js';
 
-/**
- * Media: shows a real image when `image.src` exists, otherwise a clearly
- * labelled typographic placeholder. Never renders a fake screenshot.
- *
- * @param {object}  o
- * @param {object?} o.image     { src, alt }
- * @param {string}  o.ratio     CSS aspect-ratio, e.g. "16/10"
- * @param {string}  o.variant   grid | hatch | form | type | plain
- * @param {string}  o.label     Placeholder heading
- * @param {string}  o.hint      Suggested file path
- * @param {string}  o.mark      Large centred mark (e.g. project number)
- * @param {boolean} o.lazy      Lazy-load the image
- * @param {boolean} o.reveal    Clip-path reveal on scroll
- */
+// Shows the project image if src exists, otherwise falls back to a placeholder box with the right aspect ratio.
 export function Media({
   image,
   ratio = '16/10',

@@ -5,12 +5,7 @@ const TBC = '<span class="tbc">To confirm</span>';
 
 const value = (v) => (Array.isArray(v) ? (v.length ? esc(v.join(' · ')) : TBC) : v ? esc(v) : TBC);
 
-/**
- * Project card. Layouts:
- *  - feature : full width, text left / image right
- *  - stack   : image on top, text below (for half-width columns)
- *  - inverse : full width on ink, image left / text right
- */
+// Project card with 3 layout options: 'feature' (wide banner), 'stack' (standard column), or 'inverse' (dark theme)
 export function ProjectCard(p, layout = 'stack') {
   const dark = layout === 'inverse';
   const rule = dark ? 'border-paper/25' : 'border-ink';
