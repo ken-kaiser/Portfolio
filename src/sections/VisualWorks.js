@@ -94,9 +94,7 @@ export function VisualWorks() {
                           ? `Poster ${realNumber} of ${total}`
                           : 'Poster slot',
                         mark: String(realNumber).padStart(2, '0'),
-                        hint: isSeries
-                          ? `public/works/${w.id === '05' ? 'nike' : 'scd'}/poster-${String(realNumber).padStart(2, '0')}.jpg`
-                          : `public/works/poster-${w.id}.jpg`,
+                        hint: '',
                         lazy: false,
                         reveal: false,
                       })}
@@ -200,9 +198,7 @@ export function VisualWorks() {
         ${cards}
       </div>
 
-      <!-- Quick Upload Guide Note -->
-      <div class="px-page flex flex-col justify-between gap-3 border-t border-ink py-4 label sm:flex-row text-mute bg-paper">
-        <span>To add photos, drop files into <code class="text-ink font-bold">public/works/</code> or subfolders (like <code class="text-ink font-bold">public/works/nike/</code>) and list them in <code class="text-ink font-bold">src/data/visualWorks.js</code>.</span>
+      <div class="px-page flex items-center justify-end border-t border-ink py-4 label text-mute bg-paper">
         <span class="text-ink shrink-0">${String(visualWorks.length).padStart(2, '0')} visual entries</span>
       </div>
 
@@ -518,7 +514,7 @@ export function initVisualWorks() {
             <div class="flex flex-col items-center justify-center p-8 border-2 border-dashed border-ink bg-paper text-center max-w-sm select-none">
               <span class="label bg-acid px-2 py-0.5 text-ink mb-2">${total > 1 ? `Poster ${realIdx} of ${total}` : 'Poster Slot'}</span>
               <p class="font-display text-lg font-bold mb-1">${esc(w.title)}</p>
-              <p class="label text-mute text-xs mb-3">Drop file at: ${total > 1 ? `public/works/nike/poster-0${realIdx}.jpg` : `public/works/poster-${w.id}.jpg`}</p>
+              <p class="label text-mute text-xs mb-3">Image coming soon</p>
               <span class="label text-ink border border-ink px-2 py-1 bg-surface">${w.ratio} Ratio</span>
             </div>
           </div>`;

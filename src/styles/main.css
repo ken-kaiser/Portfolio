@@ -619,9 +619,10 @@
 
   .ruler-tick {
     position: absolute;
-    left: 0;
+    right: 0;
     width: 100%;
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
     transform: translateY(-50%);
     pointer-events: none;
@@ -635,7 +636,7 @@
     background-color: rgba(23, 23, 23, 0.22); /* Minor tick: light gray */
     width: 3.5px;
     /* --vs: velocity stretch, written per frame by RulerScrollbar.js */
-    transform-origin: left center;
+    transform-origin: right center;
     transform: scaleX(var(--vs, 1));
     transition: width 120ms ease, background-color 150ms ease;
   }
@@ -670,7 +671,7 @@
     font-size: 7px;
     line-height: 1;
     color: var(--color-mute);
-    margin-left: 2px;
+    margin-right: 2px;
     letter-spacing: -0.06em;
   }
   @media (max-width: 1023px) {
@@ -710,7 +711,7 @@
     cursor: grab;
     z-index: 10;
     will-change: transform;
-    box-shadow: -1px 0 0 var(--color-ink);
+    box-shadow: 1px 0 0 var(--color-ink);
     transition: background-color 100ms ease;
   }
   .ruler-thumb:hover {
@@ -719,13 +720,13 @@
   .ruler-thumb.is-dragging {
     cursor: grabbing;
     background-color: var(--ruler-accent-hover);
-    box-shadow: 0 0 6px var(--ruler-accent-glow), -1px 0 0 var(--color-ink);
+    box-shadow: 0 0 6px var(--ruler-accent-glow), 1px 0 0 var(--color-ink);
   }
 
   /* Technical needle line */
   .ruler-needle {
     position: absolute;
-    left: 0;
+    right: 0;
     top: 50%;
     transform: translateY(-50%);
     width: 3.5px;

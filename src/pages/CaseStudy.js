@@ -137,8 +137,8 @@ export function CaseStudy(p) {
     <article aria-labelledby="cs-title">
       <!-- Breadcrumb bar -->
       <div class="grid grid-cols-2 border-b border-ink label md:grid-cols-3">
-        <a href="#work" class="px-page flex items-center gap-2 border-r border-ink py-3 hover:bg-acid">
-          <span aria-hidden="true">←</span> Back to index
+        <a href="#/" class="px-page flex items-center gap-2 border-r border-ink py-3 hover:bg-acid">
+          <span aria-hidden="true">←</span> Back to Home
         </a>
         <p class="px-page hidden border-r border-ink py-3 text-mute md:block">Case study / P—${p.number}</p>
         <a href="#/work/${next.slug}" class="px-page flex items-center justify-end gap-2 py-3 text-right hover:bg-acid">
