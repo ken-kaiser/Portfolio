@@ -1,4 +1,4 @@
-name: Deploy Portfolio to GitHub Pages
+name: CI / CD Pipeline
 
 on:
   push:
@@ -7,22 +7,21 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
+  workflow_dispatch:
 
-# Set minimal permissions required to build and deploy to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Prevent concurrent deployments from colliding
 concurrency:
-  group: 'pages'
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # ── CI: Build & Validate ──────────────────────────────────────
+  # ── CI: Build & Verify ───────────────────────────────────────
   build:
+    name: Build & Verify
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -40,15 +39,21 @@ jobs:
       - name: Build production bundle
         run: npm run build
 
+      - name: Verify build artifacts
+        run: |
+          test -d dist
+          test -f dist/index.html
+          echo "Production build verified: dist/index.html generated successfully."
+
       - name: Upload Pages artifact
-        # Only upload the deployment artifact on pushes to main (not PRs)
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
 
-  # ── CD: Deploy to GitHub Pages ────────────────────────────────
-  deploy:
+  # ── CD: Deploy to GitHub Pages (Mirror) ──────────────────────
+  deploy-github-pages:
+    name: Deploy to GitHub Pages
     needs: build
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     environment:
@@ -59,3 +64,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        continue-on-error: true
