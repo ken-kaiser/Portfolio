@@ -18,13 +18,16 @@ I build web applications and thoughtful digital experiences where software engin
 ## Featured Work
 
 ### 01 / Flagship Web Applications & Games
-1. **[Presentia](https://presentia.venki050524.workers.dev/)** — AI-Powered Facial Recognition Attendance Management System
+1. **[Out of Context](https://kebintong.github.io/Out-of-context/)** — 3D Rage Platformer Game Show for Windows
+   - **My Role**: Senior Developer
+   - **Stack & Tools**: Unity · C# · Git · PowerShell · SHA-256
+2. **[Presentia](https://presentia.venki050524.workers.dev/)** — AI-Powered Facial Recognition Attendance Management System
    - **My Role**: Project Manager
    - **Stack & Tools**: Git · ChatGPT · Claude · Cloudflare Workers
-2. **[EasyCert](https://easy-cert.vercel.app/)** — Digital Barangay Clearance & Certificate Issuance Portal
+3. **[EasyCert](https://easy-cert.vercel.app/)** — Digital Barangay Clearance & Certificate Issuance Portal
    - **My Role**: Project Manager & Software Developer
    - **Stack & Tools**: Git · ChatGPT · Claude · Vercel
-3. **[Bato-Bato Pick](https://github.com/ken-kaiser/Bato-Bato-Pick)** — Interactive Filipino Rock-Paper-Scissors Arcade Game
+4. **[Bato-Bato Pick](https://github.com/ken-kaiser/Bato-Bato-Pick)** — Interactive Filipino Rock-Paper-Scissors Arcade Game
    - **My Role**: Game Designer & Frontend Developer
    - **Stack & Tools**: HTML5 · CSS3 · JavaScript (ES6) · Web Audio API · Git
 

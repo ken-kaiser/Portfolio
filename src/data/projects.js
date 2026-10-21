@@ -8,8 +8,90 @@
 
 export const projects = [
   {
-    slug: 'presentia',
+    slug: 'out-of-context',
     number: '01',
+    name: 'Out of Context',
+    category: 'Game Development / 3D Platformer / Unity',
+    identifier: 'GAME / UNITY 3D',
+    badge: 'Windows Game',
+    summary:
+      'A single-player 3D rage platformer game show featuring twelve troll stages, deceptive traps, trivia quiz showdowns, two intense boss battles, and a sarcastic robot host who roasts every fall.',
+    status: 'Published Game',
+    role: 'Senior Developer',
+    stack: ['Unity', 'C#', 'Git', 'PowerShell', 'SHA-256'],
+    year: '2026',
+    links: [
+      { label: 'Live Website', url: 'https://kebintong.github.io/Out-of-context/' },
+      { label: 'Direct Download (.exe)', url: 'https://kebintong.github.io/Out-of-context/download/OutOfContext.exe' },
+    ],
+    cover: {
+      variant: 'grid',
+      ratio: '16/10',
+      image: {
+        src: './images/out-of-context-cover.png',
+        alt: 'Out of Context 3D Rage Platformer Game Show Title Interface',
+      },
+    },
+    features: [
+      { name: '12 troll platformer stages & deceptive obstacle traps', status: 'implemented' },
+      { name: 'The Moderator: interactive floating robot host with dynamic roasting commentary', status: 'implemented' },
+      { name: 'Two full boss showdowns (The Algorithm and MOD.EXE)', status: 'implemented' },
+      { name: 'Integrated quiz show minigames (Philippine geography, history & nonsense math)', status: 'implemented' },
+      { name: 'Post-game unlockables: Stage Select, Boss Rematch, Remix mode & 28 achievements', status: 'implemented' },
+      { name: 'Full controller & keyboard/mouse support with 5 graphics fidelity presets', status: 'implemented' },
+    ],
+    caseStudy: {
+      problem: [
+        'Classic rage platformers frequently succumb to invisible, arbitrary hazards that frustrate players without delivering a satisfying comedic or gameplay payoff.',
+        'Engineering tight, deterministic 3D platformer physics in Unity while balancing comedic troll traps, fake checkpoints, and maintaining 60+ FPS performance on entry-level laptop hardware requires careful physics and asset optimization.',
+      ],
+      approach: [
+        'Developed responsive character movement mechanics, jump timing, double jumps, airborne dives, parry systems, and deceptive hazard triggers in Unity using C#.',
+        'Framed the whole game as an absurd television game show led by The Moderator—a witty floating host whose dialogue turns unexpected player deaths into engaging entertainment.',
+      ],
+      role: 'Senior Developer — engineered core player controller physics, collision triggers, boss battle state machines, gamepad integration, and performance optimization in Unity and C#.',
+      decisions: [
+        {
+          title: 'Deterministic player physics & responsive air control',
+          text: 'Calibrated coyote time, jump buffering, ground-snap checks, and mid-air diving physics to ensure every jump feels precise and fair despite troll obstacles.',
+        },
+        {
+          title: 'Dynamic boss battle state machines',
+          text: 'Architected phase transitions for The Algorithm and MOD.EXE, featuring crumbling arenas, telegraphing laser beams, and parry mechanics that reflect projectiles.',
+        },
+        {
+          title: 'Portable single-binary release with SHA-256 verification',
+          text: 'Packaged the game into a self-contained executable with automated SHA-256 integrity verification, eliminating installer overhead for players.',
+        },
+      ],
+      challenges: [
+        'Fine-tuning trap timing, disappearing platform cycles, and boss attack hitboxes so gameplay feels challenging and hilarious rather than genuinely unfair.',
+      ],
+      prompts: {},
+    },
+    gallery: [
+      {
+        caption: 'Out of Context game show hero portal featuring The Moderator and the robot contestant',
+        ratio: '16/9',
+        image: {
+          src: './images/out-of-context-cover.png',
+          alt: 'Out of Context Game Portal Hero View',
+        },
+      },
+      {
+        caption: 'Twelve troll stages overview board, stage selection, and gameplay mechanics showcase',
+        ratio: '16/9',
+        image: {
+          src: './images/out-of-context-stages.png',
+          alt: 'Out of Context Twelve Stages and Boss Battle Overview',
+        },
+      },
+    ],
+  },
+
+  {
+    slug: 'presentia',
+    number: '02',
     name: 'Presentia',
     category: 'AI / Desktop Application / Capstone Project',
     identifier: 'AI / CAPSTONE',
@@ -90,7 +172,7 @@ export const projects = [
 
   {
     slug: 'easycert',
-    number: '02',
+    number: '03',
     name: 'EasyCert',
     category: 'Web Application / Full-Stack Development',
     identifier: 'WEB APP / FULL-STACK',
@@ -168,7 +250,7 @@ export const projects = [
 
   {
     slug: 'bato-bato-pick',
-    number: '03',
+    number: '04',
     name: 'Bato-Bato Pick',
     category: 'Web Game / Interactive Arcade',
     identifier: 'GAME / ARCADE',

@@ -77,7 +77,7 @@ export const about = {
 export const skills = [
   {
     group: 'Development',
-    items: ['HTML', 'CSS', 'JavaScript', 'Responsive Web Design', 'Django', 'PostgreSQL', 'Git'],
+    items: ['HTML', 'CSS', 'JavaScript', 'Unity', 'C#', 'Responsive Web Design', 'Django', 'PostgreSQL', 'Git'],
   },
   {
     group: 'Design',
